@@ -7,21 +7,27 @@ import React, {
 
 import {
   View,
-  Text,
   Image,
-  TextInput,
   FlatList,
-  Pressable,
   ActivityIndicator,
   StyleSheet,
 } from 'react-native';
 
 import {SafeAreaView} from 'react-native-safe-area-context';
 
+import Typography from '@components/ui/Typography';
+import ShopInput from '@components/ui/ShopInput';
+import ShopButton from '@components/ui/ShopButton';
+
 import {
   fetchSamplePosts,
   PostItem,
 } from '@services/productApi';
+
+import {
+  COLORS,
+  SIZES,
+} from '@constants/theme';
 
 const HomeScreen = () => {
   const [keyword, setKeyword] = useState('');
@@ -43,7 +49,7 @@ const HomeScreen = () => {
       }
     } catch {
       if (aliveRef.current) {
-        setError('Không tải được dữ liệu.');
+        setError('Không thể tải dữ liệu. Vui lòng thử lại.');
       }
     } finally {
       if (aliveRef.current) {
@@ -62,20 +68,27 @@ const HomeScreen = () => {
     };
   }, [load]);
 
-  const filtered = posts.filter(item =>
+  const filteredPosts = posts.filter(item =>
     item.title
       .toLowerCase()
       .includes(keyword.toLowerCase()),
   );
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safeArea}>
       <View style={styles.header}>
-        <Text style={styles.brand}>ShopAI</Text>
+        <Typography
+          variant="h1"
+          color={COLORS.primary}
+          style={styles.brand}>
+          ShopAI
+        </Typography>
 
-        <Text style={styles.caption}>
-          Sprint 2 — Core Components + Fetch
-        </Text>
+        <Typography
+          variant="body2"
+          color={COLORS.textLight}>
+          Danh sách nội dung từ API
+        </Typography>
       </View>
 
       <Image
@@ -86,63 +99,86 @@ const HomeScreen = () => {
         resizeMode="cover"
       />
 
-      <TextInput
-        value={keyword}
-        onChangeText={setKeyword}
-        placeholder="Tìm theo tiêu đề..."
-        placeholderTextColor="#95A5A6"
-        style={styles.input}
-        autoCapitalize="none"
-      />
+      <View style={styles.controlArea}>
+        <ShopInput
+          label="Tìm kiếm"
+          value={keyword}
+          onChangeText={setKeyword}
+          placeholder="Nhập tiêu đề cần tìm..."
+          autoCapitalize="none"
+        />
 
-      <Pressable
-        onPress={load}
-        style={({pressed}) => [
-          styles.button,
-          pressed && styles.buttonPressed,
-        ]}>
-        <Text style={styles.buttonText}>
-          Làm mới danh sách
-        </Text>
-      </Pressable>
+        <ShopButton
+          title="Làm mới danh sách"
+          onPress={load}
+          loading={loading}
+        />
+      </View>
 
       {loading && (
-        <ActivityIndicator
-          style={styles.loading}
-          color="#FF4D4F"
-          size="large"
-        />
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            size="large"
+            color={COLORS.primary}
+          />
+
+          <Typography
+            variant="body2"
+            color={COLORS.textLight}
+            style={styles.loadingText}>
+            Đang tải dữ liệu...
+          </Typography>
+        </View>
       )}
 
-      {error && (
-        <Text style={styles.error}>
-          {error}
-        </Text>
+      {!loading && error && (
+        <View style={styles.messageContainer}>
+          <Typography
+            variant="body1"
+            color={COLORS.error}
+            style={styles.messageText}>
+            {error}
+          </Typography>
+
+          <ShopButton
+            title="Thử lại"
+            onPress={load}
+            style={styles.retryButton}
+          />
+        </View>
       )}
 
       {!loading && !error && (
         <FlatList
-          data={filtered}
+          data={filteredPosts}
           keyExtractor={item => String(item.id)}
           contentContainerStyle={styles.listContent}
+          showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <Text style={styles.empty}>
-              Không có kết quả cho từ khóa này
-            </Text>
+            <View style={styles.messageContainer}>
+              <Typography
+                variant="body1"
+                color={COLORS.textLight}
+                style={styles.messageText}>
+                Không tìm thấy kết quả phù hợp.
+              </Typography>
+            </View>
           }
           renderItem={({item}) => (
             <View style={styles.card}>
-              <Text
+              <Typography
+                variant="h3"
                 style={styles.cardTitle}
                 numberOfLines={2}>
                 {item.title}
-              </Text>
+              </Typography>
 
-              <Text
-                style={styles.cardBody}
-                numberOfLines={2}>
+              <Typography
+                variant="body2"
+                color={COLORS.textLight}
+                numberOfLines={3}>
                 {item.body}
-              </Text>
+              </Typography>
             </View>
           )}
         />
@@ -152,25 +188,20 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  safe: {
+  safeArea: {
     flex: 1,
-    backgroundColor: '#F5F5F5',
+    backgroundColor: COLORS.background,
   },
 
   header: {
-    padding: 16,
-    backgroundColor: '#FFFFFF',
+    backgroundColor: COLORS.surface,
+    paddingHorizontal: SIZES.padding,
+    paddingTop: SIZES.padding,
+    paddingBottom: 12,
   },
 
   brand: {
-    fontSize: 28,
-    fontWeight: '800',
-    color: '#FF4D4F',
-  },
-
-  caption: {
-    color: '#7F8C8D',
-    marginTop: 4,
+    marginBottom: 4,
   },
 
   banner: {
@@ -179,36 +210,33 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
-  input: {
-    margin: 16,
-    height: 48,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: '#E8E8E8',
-    paddingHorizontal: 16,
-    backgroundColor: '#FFFFFF',
+  controlArea: {
+    padding: SIZES.padding,
+    paddingBottom: 8,
   },
 
-  button: {
-    marginHorizontal: 16,
-    marginBottom: 8,
-    backgroundColor: '#FF4D4F',
-    paddingVertical: 12,
-    borderRadius: 12,
+  loadingContainer: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: 32,
+  },
+
+  loadingText: {
+    marginTop: 12,
+  },
+
+  messageContainer: {
+    padding: 24,
     alignItems: 'center',
   },
 
-  buttonPressed: {
-    opacity: 0.85,
+  messageText: {
+    textAlign: 'center',
   },
 
-  buttonText: {
-    color: '#FFFFFF',
-    fontWeight: '600',
-  },
-
-  loading: {
-    marginTop: 24,
+  retryButton: {
+    marginTop: 16,
+    width: '100%',
   },
 
   listContent: {
@@ -216,33 +244,15 @@ const styles = StyleSheet.create({
   },
 
   card: {
-    marginHorizontal: 16,
+    marginHorizontal: SIZES.padding,
     marginTop: 10,
     padding: 14,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 12,
+    backgroundColor: COLORS.surface,
+    borderRadius: SIZES.radius,
   },
 
   cardTitle: {
-    fontWeight: '700',
-    color: '#2C3E50',
     marginBottom: 6,
-  },
-
-  cardBody: {
-    color: '#7F8C8D',
-  },
-
-  error: {
-    color: '#FF0000',
-    textAlign: 'center',
-    marginTop: 16,
-  },
-
-  empty: {
-    textAlign: 'center',
-    color: '#95A5A6',
-    marginTop: 24,
   },
 });
 

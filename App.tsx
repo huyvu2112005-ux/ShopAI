@@ -1,17 +1,9 @@
 import React from 'react';
 
-import {
-  SafeAreaProvider,
-} from 'react-native-safe-area-context';
-
-import HomeScreen from '@screens/HomeScreen';
+import LottieDemoScreen from '@screens/LottieDemoScreen';
 
 function App(): React.JSX.Element {
-  return (
-    <SafeAreaProvider>
-      <HomeScreen />
-    </SafeAreaProvider>
-  );
+  return <LottieDemoScreen />;
 }
 
 export default App;
