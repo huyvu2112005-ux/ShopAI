@@ -35,7 +35,7 @@ export default function FetchDemo() {
       const data: Post[] = await response.json();
 
       setPosts(data);
-    } catch (err) {
+    } catch {
       setError('Đã xảy ra lỗi khi tải dữ liệu.');
     } finally {
       setLoading(false);

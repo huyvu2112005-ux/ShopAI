@@ -1,188 +1,234 @@
-import React, {
-  useCallback,
-  useEffect,
-  useRef,
-  useState,
-} from 'react';
+import React, {useCallback, useState} from 'react';
+
+import {useInfiniteQuery} from '@tanstack/react-query';
 
 import {
-  View,
-  Image,
-  FlatList,
   ActivityIndicator,
   StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
-import {SafeAreaView} from 'react-native-safe-area-context';
-
-import Typography from '@components/ui/Typography';
-import ShopInput from '@components/ui/ShopInput';
-import ShopButton from '@components/ui/ShopButton';
+import {
+  SafeAreaView,
+} from 'react-native-safe-area-context';
 
 import {
-  fetchSamplePosts,
-  PostItem,
-} from '@services/productApi';
+  FlashList,
+} from '@shopify/flash-list';
+
+import {
+  NativeStackScreenProps,
+} from '@react-navigation/native-stack';
+
+import ProductCard from '@components/ProductCard';
+import LocationBadge from '@components/LocationBadge';
+import ShopButton from '@components/ui/ShopButton';
 
 import {
   COLORS,
   SIZES,
 } from '@constants/theme';
 
-const HomeScreen = () => {
-  const [keyword, setKeyword] = useState('');
-  const [posts, setPosts] = useState<PostItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+import {fetchProductsPage} from '@services/productQuery';
+import {useAuthStore} from '../store/useAuthStore';
 
-  const aliveRef = useRef(true);
+import {
+  HomeStackParamList,
+} from '../types/navigationTypes';
 
-  const load = useCallback(async () => {
-    setLoading(true);
-    setError(null);
+type HomeScreenProps =
+  NativeStackScreenProps<
+    HomeStackParamList,
+    'Home'
+  >;
 
-    try {
-      const data = await fetchSamplePosts();
+const HomeScreen = ({
+  navigation,
+  route,
+}: HomeScreenProps): React.JSX.Element => {
+  const logout = useAuthStore(state => state.logout);
+  const {
+    data,
+    isLoading,
+    isError,
+    refetch,
+    isRefetching,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+  } = useInfiniteQuery({
+    queryKey: ['productsInfinite'],
+    queryFn: fetchProductsPage,
+    initialPageParam: 1,
+    getNextPageParam: lastPage => lastPage.nextPage,
+  });
 
-      if (aliveRef.current) {
-        setPosts(data);
-      }
-    } catch {
-      if (aliveRef.current) {
-        setError('Không thể tải dữ liệu. Vui lòng thử lại.');
-      }
-    } finally {
-      if (aliveRef.current) {
-        setLoading(false);
-      }
-    }
-  }, []);
+  const products = data?.pages.flatMap(page => page.items) ?? [];
+  const scannedCode = route.params?.scannedCode;
 
-  useEffect(() => {
-    aliveRef.current = true;
+  const [searchText, setSearchText] =
+    useState('');
 
-    load();
+  const normalizedSearchText =
+    searchText.trim().toLowerCase();
 
-    return () => {
-      aliveRef.current = false;
-    };
-  }, [load]);
-
-  const filteredPosts = posts.filter(item =>
-    item.title
-      .toLowerCase()
-      .includes(keyword.toLowerCase()),
+  const filteredProducts = products.filter(
+    product =>
+      product.name.toLowerCase().includes(normalizedSearchText) ||
+      product.category.toLowerCase().includes(normalizedSearchText),
   );
 
+  const handleProductPress =
+    useCallback(
+      (productId: string) => {
+        navigation.navigate(
+          'ProductDetail',
+          {
+            productId,
+          },
+        );
+      },
+      [navigation],
+    );
+
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.header}>
-        <Typography
-          variant="h1"
-          color={COLORS.primary}
-          style={styles.brand}>
-          ShopAI
-        </Typography>
+    <SafeAreaView
+      style={styles.safeArea}
+      edges={[
+        'top',
+        'left',
+        'right',
+      ]}>
+      <View style={styles.container}>
+        <View style={styles.header}>
+          <View>
+            <Text style={styles.headerTitle}>
+              ShopAI
+            </Text>
 
-        <Typography
-          variant="body2"
-          color={COLORS.textLight}>
-          Danh sách nội dung từ API
-        </Typography>
-      </View>
+            <Text style={styles.headerSubtitle}>
+              Khám phá sản phẩm công nghệ
+            </Text>
+          </View>
 
-      <Image
-        source={{
-          uri: 'https://picsum.photos/800/200',
-        }}
-        style={styles.banner}
-        resizeMode="cover"
-      />
+          <View style={styles.headerActions}>
+            <ShopButton
+              title="Quét mã"
+              onPress={() => navigation.navigate('Scanner')}
+              style={styles.scanButton}
+            />
 
-      <View style={styles.controlArea}>
-        <ShopInput
-          label="Tìm kiếm"
-          value={keyword}
-          onChangeText={setKeyword}
-          placeholder="Nhập tiêu đề cần tìm..."
-          autoCapitalize="none"
-        />
+            <ShopButton
+              title="Thoát"
+              onPress={logout}
+              style={styles.logoutButton}
+            />
+          </View>
+        </View>
 
-        <ShopButton
-          title="Làm mới danh sách"
-          onPress={load}
-          loading={loading}
-        />
-      </View>
+        <LocationBadge />
 
-      {loading && (
-        <View style={styles.loadingContainer}>
+        {scannedCode ? (
+          <View style={styles.scannedBox}>
+            <Text style={styles.scannedLabel}>Mã vừa quét</Text>
+            <Text style={styles.scannedCode}>{scannedCode}</Text>
+          </View>
+        ) : null}
+
+        <View style={styles.searchSection}>
+          <View style={styles.searchBox}>
+            <Text style={styles.searchIcon}>⌕</Text>
+            <TextInput
+              value={searchText}
+              onChangeText={setSearchText}
+              placeholder="Tìm sản phẩm hoặc danh mục"
+              placeholderTextColor="#9AA3AF"
+              style={styles.searchInput}
+              returnKeyType="search"
+            />
+            {searchText.length > 0 && (
+              <TouchableOpacity
+                onPress={() => setSearchText('')}
+                accessibilityRole="button">
+                <Text style={styles.clearSearch}>×</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+
+          <Text style={styles.resultText}>
+            {filteredProducts.length} sản phẩm phù hợp
+          </Text>
+        </View>
+
+        {isLoading && (
           <ActivityIndicator
             size="large"
             color={COLORS.primary}
+            style={styles.loading}
           />
+        )}
 
-          <Typography
-            variant="body2"
-            color={COLORS.textLight}
-            style={styles.loadingText}>
-            Đang tải dữ liệu...
-          </Typography>
-        </View>
-      )}
+        {isError && (
+          <View style={styles.errorBox}>
+            <Text style={styles.errorText}>
+              Không tải được sản phẩm. Vui lòng thử lại.
+            </Text>
+            <ShopButton
+              title="Thử lại"
+              onPress={() => refetch()}
+              style={styles.retryButton}
+            />
+          </View>
+        )}
 
-      {!loading && error && (
-        <View style={styles.messageContainer}>
-          <Typography
-            variant="body1"
-            color={COLORS.error}
-            style={styles.messageText}>
-            {error}
-          </Typography>
-
-          <ShopButton
-            title="Thử lại"
-            onPress={load}
-            style={styles.retryButton}
-          />
-        </View>
-      )}
-
-      {!loading && !error && (
-        <FlatList
-          data={filteredPosts}
-          keyExtractor={item => String(item.id)}
-          contentContainerStyle={styles.listContent}
+        <FlashList
+          data={filteredProducts}
+          keyExtractor={item => item.id}
+          renderItem={({item}) => (
+            <ProductCard
+              product={item}
+              onPress={() =>
+                handleProductPress(item.id)
+              }
+            />
+          )}
+          numColumns={2}
+          refreshing={isRefetching}
+          onRefresh={() => refetch()}
+          onEndReached={() => {
+            if (hasNextPage && !isFetchingNextPage) {
+              fetchNextPage();
+            }
+          }}
+          onEndReachedThreshold={0.5}
+          ListFooterComponent={
+            isFetchingNextPage ? (
+              <ActivityIndicator
+                size="small"
+                color={COLORS.primary}
+                style={styles.footerLoader}
+              />
+            ) : null
+          }
+          contentContainerStyle={{
+            padding: SIZES.padding / 2,
+          }}
           showsVerticalScrollIndicator={false}
           ListEmptyComponent={
-            <View style={styles.messageContainer}>
-              <Typography
-                variant="body1"
-                color={COLORS.textLight}
-                style={styles.messageText}>
-                Không tìm thấy kết quả phù hợp.
-              </Typography>
+            <View style={styles.emptySearch}>
+              <Text style={styles.emptySearchTitle}>
+                Không tìm thấy sản phẩm
+              </Text>
+              <Text style={styles.emptySearchText}>
+                Thử tìm bằng tên sản phẩm hoặc danh mục khác.
+              </Text>
             </View>
           }
-          renderItem={({item}) => (
-            <View style={styles.card}>
-              <Typography
-                variant="h3"
-                style={styles.cardTitle}
-                numberOfLines={2}>
-                {item.title}
-              </Typography>
-
-              <Typography
-                variant="body2"
-                color={COLORS.textLight}
-                numberOfLines={3}>
-                {item.body}
-              </Typography>
-            </View>
-          )}
         />
-      )}
+      </View>
     </SafeAreaView>
   );
 };
@@ -190,69 +236,173 @@ const HomeScreen = () => {
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: COLORS.background,
+    backgroundColor:
+      COLORS.background,
+  },
+
+  container: {
+    flex: 1,
+    backgroundColor:
+      COLORS.background,
   },
 
   header: {
-    backgroundColor: COLORS.surface,
-    paddingHorizontal: SIZES.padding,
-    paddingTop: SIZES.padding,
-    paddingBottom: 12,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+
+    paddingHorizontal:
+      SIZES.padding,
+    paddingVertical:
+      15,
+
+    backgroundColor:
+      COLORS.surface,
   },
 
-  brand: {
+  headerTitle: {
+    fontSize:
+      SIZES.h1,
+    fontWeight:
+      'bold',
+    color:
+      COLORS.text,
+  },
+
+  headerSubtitle: {
+    marginTop:
+      4,
+    fontSize:
+      13,
+    color:
+      '#777777',
+  },
+
+  logoutButton: {
+    width: 80,
+    height: 36,
+  },
+
+  headerActions: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+  },
+
+  scanButton: {
+    width: 92,
+    height: 36,
+    backgroundColor: COLORS.secondary,
+  },
+
+  scannedBox: {
+    marginHorizontal: SIZES.padding,
+    marginTop: 10,
+    padding: 12,
+    borderRadius: SIZES.radius,
+    backgroundColor: '#FFF7E6',
+    borderWidth: 1,
+    borderColor: '#FFD591',
+  },
+
+  scannedLabel: {
+    fontSize: 12,
+    color: COLORS.textLight,
     marginBottom: 4,
   },
 
-  banner: {
-    width: '100%',
-    height: 120,
+  scannedCode: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: COLORS.text,
+  },
+
+  searchSection: {
+    paddingHorizontal: SIZES.padding,
+    paddingTop: 12,
+    paddingBottom: 4,
+  },
+
+  searchBox: {
+    height: 48,
+    borderRadius: 12,
+    paddingHorizontal: 12,
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.surface,
+    borderWidth: 1,
+    borderColor: COLORS.border,
+  },
+
+  searchIcon: {
+    color: COLORS.primary,
+    fontSize: 27,
+    lineHeight: 28,
+    marginRight: 8,
+  },
+
+  searchInput: {
+    flex: 1,
+    color: COLORS.text,
+    fontSize: 14,
+    paddingVertical: 0,
+  },
+
+  clearSearch: {
+    color: COLORS.textLight,
+    fontSize: 26,
+    lineHeight: 28,
+    paddingLeft: 8,
+  },
+
+  resultText: {
+    color: COLORS.textLight,
+    fontSize: 12,
     marginTop: 8,
+    marginLeft: 2,
   },
 
-  controlArea: {
+  emptySearch: {
+    alignItems: 'center',
+    paddingHorizontal: SIZES.padding,
+    paddingTop: 80,
+  },
+
+  emptySearchTitle: {
+    color: COLORS.text,
+    fontSize: 18,
+    fontWeight: '800',
+  },
+
+  emptySearchText: {
+    color: COLORS.textLight,
+    fontSize: 14,
+    marginTop: 8,
+    textAlign: 'center',
+  },
+
+  loading: {
+    marginTop: 32,
+  },
+
+  errorBox: {
+    alignItems: 'center',
     padding: SIZES.padding,
-    paddingBottom: 8,
   },
 
-  loadingContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 32,
-  },
-
-  loadingText: {
-    marginTop: 12,
-  },
-
-  messageContainer: {
-    padding: 24,
-    alignItems: 'center',
-  },
-
-  messageText: {
+  errorText: {
+    color: COLORS.error,
     textAlign: 'center',
   },
 
   retryButton: {
-    marginTop: 16,
-    width: '100%',
+    width: 110,
+    height: 40,
+    marginTop: 12,
   },
 
-  listContent: {
-    paddingBottom: 24,
-  },
-
-  card: {
-    marginHorizontal: SIZES.padding,
-    marginTop: 10,
-    padding: 14,
-    backgroundColor: COLORS.surface,
-    borderRadius: SIZES.radius,
-  },
-
-  cardTitle: {
-    marginBottom: 6,
+  footerLoader: {
+    marginVertical: 16,
   },
 });
 
