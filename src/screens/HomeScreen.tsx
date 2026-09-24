@@ -103,29 +103,49 @@ const HomeScreen = ({
         'right',
       ]}>
       <View style={styles.container}>
-        <View style={styles.header}>
-          <View>
-            <Text style={styles.headerTitle}>
-              ShopAI
-            </Text>
+        <View style={styles.headerShell}>
+          <View style={styles.headerTop}>
+            <View style={styles.brandBlock}>
+              <View style={styles.logoMark}>
+                <Text style={styles.logoText}>S</Text>
+              </View>
 
-            <Text style={styles.headerSubtitle}>
-              Khám phá sản phẩm công nghệ
-            </Text>
+              <View style={styles.titleBlock}>
+                <Text style={styles.headerTitle}>
+                  ShopAI
+                </Text>
+
+                <Text style={styles.headerSubtitle}>
+                  Mua sắm công nghệ thông minh
+                </Text>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              onPress={logout}
+              accessibilityRole="button"
+              style={styles.logoutPill}>
+              <Text style={styles.logoutText}>Thoát</Text>
+            </TouchableOpacity>
           </View>
 
-          <View style={styles.headerActions}>
-            <ShopButton
-              title="Quét mã"
-              onPress={() => navigation.navigate('Scanner')}
-              style={styles.scanButton}
-            />
+          <View style={styles.scanPanel}>
+            <View style={styles.scanCopy}>
+              <Text style={styles.scanLabel}>
+                Quét mã sản phẩm
+              </Text>
 
-            <ShopButton
-              title="Thoát"
-              onPress={logout}
-              style={styles.logoutButton}
-            />
+              <Text style={styles.scanHint}>
+                Dùng camera để đọc QR hoặc mã vạch
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate('Scanner')}
+              accessibilityRole="button"
+              style={styles.scanButton}>
+              <Text style={styles.scanButtonText}>Quét mã</Text>
+            </TouchableOpacity>
           </View>
         </View>
 
@@ -133,8 +153,10 @@ const HomeScreen = ({
 
         {scannedCode ? (
           <View style={styles.scannedBox}>
-            <Text style={styles.scannedLabel}>Mã vừa quét</Text>
-            <Text style={styles.scannedCode}>{scannedCode}</Text>
+            <View>
+              <Text style={styles.scannedLabel}>Mã vừa quét</Text>
+              <Text style={styles.scannedCode}>{scannedCode}</Text>
+            </View>
           </View>
         ) : null}
 
@@ -145,22 +167,29 @@ const HomeScreen = ({
               value={searchText}
               onChangeText={setSearchText}
               placeholder="Tìm sản phẩm hoặc danh mục"
-              placeholderTextColor="#9AA3AF"
+              placeholderTextColor="#99A2B0"
               style={styles.searchInput}
               returnKeyType="search"
             />
             {searchText.length > 0 && (
               <TouchableOpacity
                 onPress={() => setSearchText('')}
-                accessibilityRole="button">
+                accessibilityRole="button"
+                style={styles.clearButton}>
                 <Text style={styles.clearSearch}>×</Text>
               </TouchableOpacity>
             )}
           </View>
 
-          <Text style={styles.resultText}>
-            {filteredProducts.length} sản phẩm phù hợp
-          </Text>
+          <View style={styles.resultRow}>
+            <Text style={styles.headerTitle}>
+              Sản phẩm nổi bật
+            </Text>
+
+            <Text style={styles.resultText}>
+              {filteredProducts.length} phù hợp
+            </Text>
+          </View>
         </View>
 
         {isLoading && (
@@ -246,60 +275,134 @@ const styles = StyleSheet.create({
       COLORS.background,
   },
 
-  header: {
+  headerShell: {
+    backgroundColor:
+      COLORS.surface,
+    paddingHorizontal: SIZES.padding,
+    paddingTop: 14,
+    paddingBottom: 16,
+    borderBottomWidth: 1,
+    borderBottomColor: '#EEF1F4',
+  },
+
+  headerTop: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
 
-    paddingHorizontal:
-      SIZES.padding,
-    paddingVertical:
-      15,
+  brandBlock: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginRight: 12,
+  },
 
-    backgroundColor:
-      COLORS.surface,
+  logoMark: {
+    width: 42,
+    height: 42,
+    borderRadius: 12,
+    backgroundColor: COLORS.primary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginRight: 10,
+  },
+
+  logoText: {
+    color: COLORS.surface,
+    fontSize: 22,
+    fontWeight: '900',
+  },
+
+  titleBlock: {
+    flex: 1,
   },
 
   headerTitle: {
     fontSize:
-      SIZES.h1,
+      SIZES.h2,
     fontWeight:
-      'bold',
+      '800',
     color:
       COLORS.text,
   },
 
   headerSubtitle: {
     marginTop:
-      4,
+      2,
     fontSize:
       13,
     color:
       '#777777',
   },
 
-  logoutButton: {
-    width: 80,
-    height: 36,
+  logoutPill: {
+    minWidth: 66,
+    height: 34,
+    borderRadius: 17,
+    backgroundColor: '#FFF1F1',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 12,
   },
 
-  headerActions: {
+  logoutText: {
+    color: COLORS.primary,
+    fontSize: 13,
+    fontWeight: '800',
+  },
+
+  scanPanel: {
+    marginTop: 16,
+    borderRadius: 18,
+    padding: 14,
+    backgroundColor: '#F8FAFF',
+    borderWidth: 1,
+    borderColor: '#DDE7FF',
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    justifyContent: 'space-between',
+  },
+
+  scanCopy: {
+    flex: 1,
+    paddingRight: 12,
+  },
+
+  scanLabel: {
+    color: COLORS.text,
+    fontSize: 15,
+    fontWeight: '800',
+  },
+
+  scanHint: {
+    marginTop: 3,
+    color: COLORS.textLight,
+    fontSize: 12,
+    lineHeight: 17,
   },
 
   scanButton: {
-    width: 92,
-    height: 36,
+    minWidth: 96,
+    height: 42,
+    borderRadius: 21,
     backgroundColor: COLORS.secondary,
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 14,
+  },
+
+  scanButtonText: {
+    color: COLORS.surface,
+    fontSize: 14,
+    fontWeight: '800',
   },
 
   scannedBox: {
     marginHorizontal: SIZES.padding,
     marginTop: 10,
     padding: 12,
-    borderRadius: SIZES.radius,
+    borderRadius: 14,
     backgroundColor: '#FFF7E6',
     borderWidth: 1,
     borderColor: '#FFD591',
@@ -319,14 +422,14 @@ const styles = StyleSheet.create({
 
   searchSection: {
     paddingHorizontal: SIZES.padding,
-    paddingTop: 12,
-    paddingBottom: 4,
+    paddingTop: 14,
+    paddingBottom: 6,
   },
 
   searchBox: {
-    height: 48,
-    borderRadius: 12,
-    paddingHorizontal: 12,
+    height: 50,
+    borderRadius: 16,
+    paddingHorizontal: 14,
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: COLORS.surface,
@@ -352,14 +455,26 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     fontSize: 26,
     lineHeight: 28,
-    paddingLeft: 8,
+  },
+
+  clearButton: {
+    width: 32,
+    height: 32,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  resultRow: {
+    marginTop: 14,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
   },
 
   resultText: {
     color: COLORS.textLight,
     fontSize: 12,
-    marginTop: 8,
-    marginLeft: 2,
+    fontWeight: '700',
   },
 
   emptySearch: {

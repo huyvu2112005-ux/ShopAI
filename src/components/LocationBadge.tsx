@@ -17,21 +17,28 @@ const LocationBadge = (): React.JSX.Element => {
 
   if (loading) {
     return (
-      <View style={styles.badge}>
+      <View style={[styles.badge, styles.badgeNeutral]}>
         <ActivityIndicator size="small" color={COLORS.primary} />
-        <Text style={styles.textMuted}>Dang xac dinh vi tri cua ban...</Text>
+        <Text style={styles.textMuted}>Đang xác định vị trí của bạn...</Text>
       </View>
     );
   }
 
   if (error || !coords) {
     return (
-      <Pressable style={styles.badge} onPress={refresh}>
-        <Text style={styles.textMuted}>
-          {error ?? 'Chua ro vi tri'} - tam tinh phi ship{' '}
-          {formatVnd(DEFAULT_SHIPPING_FEE)}
-        </Text>
-        <Text style={styles.retry}>Thu lai</Text>
+      <Pressable
+        style={[styles.badge, styles.badgeWarning]}
+        onPress={refresh}>
+        <View style={styles.statusDot} />
+        <View style={styles.content}>
+          <Text style={styles.title}>
+            {error ?? 'Chưa rõ vị trí'}
+          </Text>
+          <Text style={styles.subtitle}>
+            Tạm tính phí ship {formatVnd(DEFAULT_SHIPPING_FEE)}
+          </Text>
+        </View>
+        <Text style={styles.retry}>Thử lại</Text>
       </Pressable>
     );
   }
@@ -46,16 +53,17 @@ const LocationBadge = (): React.JSX.Element => {
 
   return (
     <Pressable style={[styles.badge, styles.badgeSuccess]} onPress={refresh}>
+      <View style={[styles.statusDot, styles.statusDotSuccess]} />
       <View style={styles.content}>
         <Text style={styles.title}>
-          Cach kho {distanceKm.toFixed(1)} km - Ship {formatVnd(tier.fee)}
+          Cách kho {distanceKm.toFixed(1)} km - Ship {formatVnd(tier.fee)}
         </Text>
         <Text style={styles.subtitle}>{tier.label}</Text>
         <Text style={styles.coords}>
           ({coords.latitude.toFixed(4)}, {coords.longitude.toFixed(4)})
         </Text>
       </View>
-      <Text style={styles.retry}>Lam moi</Text>
+      <Text style={styles.retry}>Làm mới</Text>
     </Pressable>
   );
 };
@@ -64,14 +72,34 @@ const styles = StyleSheet.create({
   badge: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F2F2F2',
-    paddingVertical: 10,
+    paddingVertical: 12,
     paddingHorizontal: SIZES.padding,
     gap: 8,
+    borderBottomWidth: 1,
+    borderBottomColor: '#E8EEF2',
+  },
+
+  badgeNeutral: {
+    backgroundColor: '#F8FAFC',
+  },
+
+  badgeWarning: {
+    backgroundColor: '#FFF8E6',
   },
 
   badgeSuccess: {
-    backgroundColor: '#E8F5E9',
+    backgroundColor: '#ECFDF3',
+  },
+
+  statusDot: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#F59E0B',
+  },
+
+  statusDotSuccess: {
+    backgroundColor: COLORS.success,
   },
 
   content: {
@@ -80,7 +108,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 13,
-    fontWeight: '700',
+    fontWeight: '800',
     color: COLORS.text,
   },
 
@@ -100,12 +128,13 @@ const styles = StyleSheet.create({
     fontSize: 13,
     color: COLORS.textLight,
     flex: 1,
+    fontWeight: '600',
   },
 
   retry: {
     fontSize: 12,
     color: COLORS.primary,
-    fontWeight: '700',
+    fontWeight: '800',
     marginLeft: 8,
   },
 });

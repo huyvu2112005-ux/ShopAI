@@ -49,11 +49,11 @@ const ScannerScreen = ({
 
   const openAppSettings = () => {
     Alert.alert(
-      'Can quyen Camera',
-      'ShopAI can Camera de quet ma vach. Hay mo Cai dat va bat lai quyen Camera.',
+      'Cần quyền Camera',
+      'ShopAI cần Camera để quét mã vạch. Hãy mở Cài đặt và bật lại quyền Camera.',
       [
-        {text: 'De sau', style: 'cancel'},
-        {text: 'Mo Cai dat', onPress: () => Linking.openSettings()},
+        {text: 'Để sau', style: 'cancel'},
+        {text: 'Mở Cài đặt', onPress: () => Linking.openSettings()},
       ],
     );
   };
@@ -79,7 +79,7 @@ const ScannerScreen = ({
   if (permission === 'checking') {
     return (
       <View style={styles.center}>
-        <Text style={styles.stateText}>Dang kiem tra quyen Camera...</Text>
+        <Text style={styles.stateText}>Đang kiểm tra quyền Camera...</Text>
       </View>
     );
   }
@@ -87,18 +87,18 @@ const ScannerScreen = ({
   if (permission === 'denied') {
     return (
       <View style={styles.center}>
-        <Text style={styles.deniedTitle}>Chua co quyen Camera</Text>
+        <Text style={styles.deniedTitle}>Chưa có quyền Camera</Text>
         <Text style={styles.deniedDesc}>
-          ShopAI can Camera de quet ma vach san pham. Anh chi duoc xu ly
-          tren may cua ban.
+          ShopAI cần Camera để quét mã vạch sản phẩm. Ảnh chỉ được xử lý
+          trên máy của bạn.
         </Text>
         <ShopButton
-          title="Mo Cai dat"
+          title="Mở Cài đặt"
           onPress={openAppSettings}
           style={styles.actionButton}
         />
         <ShopButton
-          title="Quay lai"
+          title="Quay lại"
           onPress={() => navigation.goBack()}
           style={[styles.actionButton, styles.secondaryButton]}
         />
@@ -109,12 +109,12 @@ const ScannerScreen = ({
   if (device == null) {
     return (
       <View style={styles.center}>
-        <Text style={styles.stateText}>Thiet bi khong co Camera sau.</Text>
+        <Text style={styles.stateText}>Thiết bị không có Camera sau.</Text>
         <Text style={styles.deniedDesc}>
-          Hay thu tren dien thoai that de kiem tra tinh nang quet ma.
+          Hãy thử trên điện thoại thật để kiểm tra tính năng quét mã.
         </Text>
         <ShopButton
-          title="Quay lai"
+          title="Quay lại"
           onPress={() => navigation.goBack()}
           style={styles.actionButton}
         />
@@ -136,9 +136,9 @@ const ScannerScreen = ({
       </View>
 
       <View style={styles.overlay}>
-        <Text style={styles.instruction}>Dua ma vach vao khung hinh</Text>
+        <Text style={styles.instruction}>Đưa mã vạch vào khung hình</Text>
         <ShopButton
-          title="Huy bo"
+          title="Hủy bỏ"
           onPress={() => navigation.goBack()}
           style={styles.cancelButton}
         />

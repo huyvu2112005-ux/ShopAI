@@ -4,10 +4,10 @@ export const WAREHOUSE_COORDS = {
 };
 
 export const SHIPPING_TIERS = [
-  {maxKm: 5, fee: 15000, label: 'Noi thanh - giao trong 2 gio'},
-  {maxKm: 20, fee: 25000, label: 'Ngoai thanh - giao trong ngay'},
-  {maxKm: 100, fee: 40000, label: 'Lien tinh gan - 1-2 ngay'},
-  {maxKm: Infinity, fee: 60000, label: 'Lien tinh xa - 3-5 ngay'},
+  {maxKm: 5, fee: 15000, label: 'Nội thành - giao trong 2 giờ'},
+  {maxKm: 20, fee: 25000, label: 'Ngoại thành - giao trong ngày'},
+  {maxKm: 100, fee: 40000, label: 'Liên tỉnh gần - 1-2 ngày'},
+  {maxKm: Infinity, fee: 60000, label: 'Liên tỉnh xa - 3-5 ngày'},
 ];
 
 export const DEFAULT_SHIPPING_FEE = 30000;

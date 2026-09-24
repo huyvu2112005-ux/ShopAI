@@ -36,7 +36,10 @@ function ProductCard({product, onPress}: Props) {
         </Text>
 
         <View style={styles.ratingRow}>
-          <Text style={styles.rating}>★ {product.rating}</Text>
+          <View style={styles.ratingPill}>
+            <Text style={styles.rating}>★ {product.rating}</Text>
+          </View>
+
           <Text style={styles.stock}>Còn {product.stock}</Text>
         </View>
 
@@ -60,15 +63,17 @@ const styles = StyleSheet.create({
   card: {
     flex: 1,
     backgroundColor: '#fff',
-    padding: 12,
-    borderRadius: 14,
+    padding: 10,
+    borderRadius: 16,
     margin: 6,
-    minHeight: 300,
+    minHeight: 292,
     shadowColor: '#000',
-    shadowOffset: {width: 0, height: 2},
-    shadowOpacity: 0.06,
-    shadowRadius: 6,
-    elevation: 2,
+    shadowOffset: {width: 0, height: 4},
+    shadowOpacity: 0.08,
+    shadowRadius: 10,
+    elevation: 3,
+    borderWidth: 1,
+    borderColor: '#EEF1F4',
   },
 
   productArea: {
@@ -76,12 +81,12 @@ const styles = StyleSheet.create({
   },
 
   imageWrap: {
-    height: 132,
-    borderRadius: 10,
+    height: 124,
+    borderRadius: 14,
     backgroundColor: '#F7F8FA',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 9,
   },
 
   image: {
@@ -93,13 +98,14 @@ const styles = StyleSheet.create({
   category: {
     color: '#8B95A5',
     fontSize: 11,
+    fontWeight: '700',
     marginBottom: 4,
   },
 
   name: {
     color: '#263445',
-    fontSize: 15,
-    fontWeight: '700',
+    fontSize: 14,
+    fontWeight: '800',
     lineHeight: 20,
     minHeight: 40,
   },
@@ -111,10 +117,18 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
 
+  ratingPill: {
+    minHeight: 24,
+    borderRadius: 12,
+    backgroundColor: '#FFF7E6',
+    paddingHorizontal: 7,
+    justifyContent: 'center',
+  },
+
   rating: {
     color: '#B77A00',
     fontSize: 12,
-    fontWeight: '700',
+    fontWeight: '800',
   },
 
   stock: {
@@ -125,15 +139,16 @@ const styles = StyleSheet.create({
   price: {
     color: '#FF4D4F',
     fontSize: 15,
-    fontWeight: '800',
-    marginVertical: 10,
+    fontWeight: '900',
+    marginTop: 10,
+    marginBottom: 11,
   },
 
   button: {
     backgroundColor: '#FF4D4F',
-    minHeight: 42,
+    minHeight: 40,
     paddingHorizontal: 8,
-    borderRadius: 10,
+    borderRadius: 13,
     alignItems: 'center',
     justifyContent: 'center',
   },
