@@ -15,7 +15,6 @@ import {
   Pressable,
   StyleSheet,
   Text,
-  TextInput,
   TouchableOpacity,
   View,
 } from 'react-native';
@@ -33,8 +32,11 @@ import {
 } from '@react-navigation/native-stack';
 
 import ProductCard from '@components/ProductCard';
+import ShopExperience from '@components/ShopExperience';
 import LocationBadge from '@components/LocationBadge';
 import ShopButton from '@components/ui/ShopButton';
+import ShopInput from '@components/ui/ShopInput';
+import Typography from '@components/ui/Typography';
 
 import {
   ThemeColors,
@@ -185,7 +187,8 @@ const HomeScreen = ({
 
         <View style={styles.searchBox}>
           <Text style={styles.searchIcon}>⌕</Text>
-          <TextInput
+          <ShopInput
+            containerStyle={styles.searchField}
             value={searchText}
             onChangeText={setSearchText}
             placeholder="Tìm sản phẩm, danh mục..."
@@ -326,7 +329,7 @@ const HomeScreen = ({
 
       <View style={styles.sectionHeader}>
         <View>
-          <Text style={styles.sectionTitle}>Sản phẩm nổi bật</Text>
+          <Typography variant="h2" style={styles.sectionTitle}>Sản phẩm nổi bật</Typography>
           <Text style={styles.sectionSub}>
             {filteredProducts.length} sản phẩm phù hợp
           </Text>
@@ -374,6 +377,7 @@ const HomeScreen = ({
         ListHeaderComponent={renderHeader}
         ListFooterComponent={
           <View>
+            <ShopExperience />
               <Text style={styles.devCrashText}>ShopAI v{APP_VERSION}</Text>
             {isFetchingNextPage ? (
               <ActivityIndicator
@@ -574,11 +578,14 @@ const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   },
 
   searchInput: {
-    flex: 1,
+    height: 44,
+    borderWidth: 0,
+    backgroundColor: 'transparent',
     color: COLORS.text,
     fontSize: 14,
     paddingVertical: 0,
   },
+  searchField: {flex: 1, width: undefined, marginBottom: 0},
 
   scanIconButton: {
     width: 38,

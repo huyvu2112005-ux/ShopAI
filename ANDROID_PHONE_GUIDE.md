@@ -1,5 +1,19 @@
 # Cài ShopAI lên điện thoại Android qua USB
 
+## Xiaomi 14: kết nối Wi-Fi khi USB không nhận
+
+Đã cài thành công APK Release lên Xiaomi 14 trong phiên hỗ trợ này. Người dùng xác nhận quét mã và vân tay hoạt động. Để kết nối lại:
+
+1. Máy tính và điện thoại dùng mạng có thể truy cập nhau. Trên Xiaomi: Cài đặt → Cài đặt bổ sung → Tùy chọn nhà phát triển → Gỡ lỗi không dây.
+2. Mở **Ghép đôi thiết bị với mã ghép đôi**, giữ nguyên hộp thoại. Trên máy tính chạy `adb pair IP:CONG_GHEP`, nhập mã sáu số đang hiện trên điện thoại. Mã hết hạn thì mở hộp thoại mới.
+3. Đóng hộp thoại; dùng **Địa chỉ IP & Cổng** trên trang Gỡ lỗi không dây để chạy `adb connect IP:CONG_KET_NOI`. Cổng kết nối thường khác cổng ghép đôi. Các chữ IP/CONG là chỗ thay bằng số trên điện thoại.
+4. Bật **Cài đặt qua USB** nếu Xiaomi chặn cài APK với lỗi `INSTALL_FAILED_USER_RESTRICTED`; tự xác nhận các yêu cầu trên điện thoại.
+5. Giữ backend chạy, rồi chạy `npm.cmd run phone:connect -- IP:CONG_KET_NOI`. Lệnh này cũng tạo adb reverse cho backend trên kết nối Wi-Fi. Không cần cáp khi wireless ADB còn kết nối.
+
+Một điện thoại có thể xuất hiện hai lần trong adb (IP và tên mDNS); chỉ rõ một serial như bước 5. Sau khi đổi Wi-Fi, khởi động lại máy hoặc tắt wireless debugging, địa chỉ/cổng có thể đổi. Khi dùng xong có thể tắt Gỡ lỗi không dây; app QA sẽ cần kết nối lại để gọi backend máy tính.
+
+## Kết nối bằng cáp
+
 Bản USB dùng backend NestJS trên máy tính. Giữ máy tính, backend và cáp USB hoạt động khi thử đăng nhập, sản phẩm, đặt đơn và AI.
 
 1. Trên điện thoại mở **Cài đặt → Thông tin điện thoại**, nhấn **Số bản dựng** 7 lần để bật Tùy chọn nhà phát triển. Một số máy đặt mục này trong Thông tin phần mềm.

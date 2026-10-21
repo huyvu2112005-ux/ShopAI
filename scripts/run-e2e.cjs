@@ -30,7 +30,7 @@ async function main() {
  const response = await fetch(`${origin}/api/orders`, {headers: {Authorization: `Bearer ${session.accessToken}`}});
  const orders = await response.json();
  if (!response.ok || !orders.some(order => order.status === 'PAID')) {throw Error('UI passed but no PAID order was persisted for the QA account.');}
- const report = {checkedAt: new Date().toISOString(), serial, appId, flows: ['login_home', 'cart_checkout'], status: 'PASS', orders: orders.map(({id, total, status}) => ({id, total, status}))};
+ const report = {checkedAt: new Date().toISOString(), serial, appId, flows: ['login_home', 'cart_checkout', 'ui_audit'], status: 'PASS', orders: orders.map(({id, total, status}) => ({id, total, status}))};
  fs.writeFileSync(path.join(reportDir, 'acceptance.json'), JSON.stringify(report, null, 2));
  console.log('E2E PASS: real JWT login, UI checkout and persisted PAID order verified.');
 }

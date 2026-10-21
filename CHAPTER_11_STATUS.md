@@ -7,17 +7,17 @@
 | Hạng mục | Kết quả |
 | --- | --- |
 | ESLint, TypeScript | PASS |
-| Jest mobile + RNTL | 64 tests / 13 suites PASS |
-| Coverage mobile | Statements 56.54%, branches 56.02%, functions 53.26%, lines 54.89% |
+| Jest mobile + RNTL | 66 tests / 14 suites PASS |
+| Coverage mobile | Statements 59.39%, branches 58.19%, functions 55.61%, lines 58.22% |
 | Tiện ích định dạng tiền | 100%; tái sử dụng ở giỏ, checkout, sản phẩm, đơn hàng |
 | Store | Trên 95%; thêm/gộp/xóa/tổng tiền/số lượng/clear và checkout snapshot |
 | AuthService unit | 3 PASS; mock Prisma/JWT, giữ bcrypt và AuthService thật |
 | Supertest | 7 PASS; Nest, ValidationPipe, JWT Guard và SQLite riêng thật |
 | Backend regression | 7 PASS; JWT/ownership/total/payment/persistence và AI transport |
-| Maestro Windows 2.11.0 | 2/2 flows PASS trên emulator-5556 |
+| Maestro Windows 2.11.0 | 3/3 flows PASS trên emulator-5556 |
 | APK USB Release | Build, cài và mở trên máy ảo PASS |
 
-Maestro đã đăng nhập tài khoản QA mới, mở iPhone 16 Pro, thêm giỏ, checkout và thanh toán. Backend xác nhận đơn `ORD-1792598929883-c641e57f`, tổng 28.990.000 VND, trạng thái PAID. Báo cáo máy chạy: `.maestro/artifacts/junit.xml`, `acceptance.json` và ảnh chụp, được gitignore vì chứa dữ liệu thử nghiệm. Các tài khoản này chỉ là dữ liệu tổng hợp.
+Maestro đã đăng nhập tài khoản QA mới, mở iPhone 16 Pro, thêm giỏ, checkout và thanh toán. Backend xác nhận đơn `ORD-1792604014482-b41aae32`, tổng 28.990.000 VND, trạng thái PAID. Báo cáo máy chạy: `.maestro/artifacts/junit.xml`, `acceptance.json` và ảnh chụp, được gitignore vì chứa dữ liệu thử nghiệm. Các tài khoản này chỉ là dữ liệu tổng hợp.
 
 Ngưỡng coverage giữ đúng tài liệu: global statements/functions/lines 40%, branches 30%; utils 90/80/90/90; store 70/60/70/70. Không hạ ngưỡng hoặc chỉ đo riêng các file dễ đạt. Coverage toàn bộ `src` trừ types/constants/declarations/test được khai báo trong jest.config.js. RNTL 14 dùng API bất đồng bộ, các thao tác render/press đều await.
 
@@ -51,4 +51,4 @@ React Native DevTools là công cụ hiện tại; Flipper là công cụ lịch
 
 ## Giới hạn
 
-Điện thoại Android thật chưa xuất hiện trong `adb devices` ở lần kiểm tra này; chỉ hai máy ảo. Chưa xác nhận chạy trên máy thật, chưa có backend public hay phát hành store. CI chỉ được coi đạt sau khi GitHub Actions chạy xanh; việc có workflow trong source chưa đủ chứng minh.
+APK Release đã cài thành công trên Xiaomi 14 qua wireless ADB; người dùng xác nhận camera và vân tay hoạt động. CI run 39642045282 đã xanh toàn bộ, gồm lint/TypeScript, mobile Node 22/24, backend và APK artifact: https://github.com/huyvu2112005-ux/ShopAI/actions/runs/39642045282 . Chưa có backend public hay phát hành store. Xem CHAPTER_1_11_AUDIT.md cho phần còn chờ bằng chứng.

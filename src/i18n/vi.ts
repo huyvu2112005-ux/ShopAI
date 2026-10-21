@@ -8,6 +8,11 @@ const vi = {
     changeToVietnamese: 'Chuyển sang tiếng Việt',
     changeToEnglish: 'Chuyển sang tiếng Anh',
     welcome: 'Chào mừng bạn đến với ShopAI',
+    animation: 'Hiệu ứng chuyển động ShopAI',
+    countdown: 'Đếm ngược: {{seconds}} giây',
+    start: 'Bắt đầu đếm ngược',
+    pause: 'Tạm dừng',
+    restart: 'Làm lại',
   },
 };
 

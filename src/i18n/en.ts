@@ -1,5 +1,10 @@
 const en = {
   translation: {
+    animation: 'ShopAI animation',
+    countdown: 'Countdown: {{seconds}} seconds',
+    start: 'Start countdown',
+    pause: 'Pause',
+    restart: 'Reset',
     title: 'Multi-language',
     description: 'Example of switching between Vietnamese and English.',
     currentLanguage: 'Current language',

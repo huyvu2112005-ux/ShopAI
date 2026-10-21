@@ -4,6 +4,8 @@ import {
   View,
   TextInput,
   TextInputProps,
+  StyleProp,
+  ViewStyle,
   StyleSheet,
 } from 'react-native';
 
@@ -17,18 +19,20 @@ import {
 type ShopInputProps = TextInputProps & {
   label?: string;
   error?: string;
+  containerStyle?: StyleProp<ViewStyle>;
 };
 
 export default function ShopInput({
   label,
   error,
   style,
+  containerStyle,
   ...props
 }: ShopInputProps) {
   const {colors: COLORS, styles} = useThemedStyles(makeStyles);
 
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, containerStyle]}>
       {label ? (
         <Typography
           variant="body2"

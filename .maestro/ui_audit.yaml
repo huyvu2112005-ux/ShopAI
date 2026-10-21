@@ -1,0 +1,40 @@
+appId: ${E2E_APP_ID}
+name: Home Language Countdown Theme and AI UI
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: allow
+- runFlow: subflows/login.yaml
+- scrollUntilVisible:
+    element:
+      text: English
+    direction: DOWN
+    timeout: 60000
+- tapOn: English
+- assertVisible: Welcome to ShopAI
+- tapOn: "Tiếng Việt"
+- assertVisible: "Chào mừng bạn đến với ShopAI"
+- scrollUntilVisible:
+    element:
+      text: "Bắt đầu đếm ngược"
+    direction: DOWN
+    timeout: 15000
+- tapOn: "Bắt đầu đếm ngược"
+- assertVisible: "Tạm dừng"
+- tapOn: "Tạm dừng"
+- takeScreenshot: .maestro/artifacts/home-language-countdown
+- scrollUntilVisible:
+    element:
+      text: "Tối"
+    direction: UP
+    timeout: 60000
+- tapOn: "Tối"
+- assertVisible: "Sáng"
+- takeScreenshot: .maestro/artifacts/home-dark
+- tapOn: "Sáng"
+- takeScreenshot: .maestro/artifacts/home-light
+- tapOn: "Trợ lý AI"
+- assertVisible: "Trợ lý ShopAI"
+- assertVisible: "Laptop nào phù hợp học tập?"
+- takeScreenshot: .maestro/artifacts/ai-empty-suggestions

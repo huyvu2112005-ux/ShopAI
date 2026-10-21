@@ -1,3 +1,5 @@
+Nghiệm thu mới nhất: [Đối chiếu từng bài 1–11](CHAPTER_1_11_AUDIT.md).
+
 Bài 11: [Kết quả kiểm thử](CHAPTER_11_STATUS.md) · [Cài lên Android qua USB](ANDROID_PHONE_GUIDE.md).
 
 # ShopAI — Chương 1–11

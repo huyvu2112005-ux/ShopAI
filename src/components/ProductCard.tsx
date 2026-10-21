@@ -14,6 +14,7 @@ import {
 
 import {Product} from '../data/mockProducts';
 import {useCartStore} from '../store/useCartStore';
+import ShopButton from './ui/ShopButton';
 
 interface Props {
   product: Product;
@@ -56,15 +57,14 @@ function ProductCard({product, onPress}: Props) {
         <Text style={styles.price}>{formatCurrency(product.price)}</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
+      <ShopButton
         style={styles.button}
-        accessibilityRole="button"
+        textStyle={styles.buttonText}
+        title={product.stock === 0 ? 'Hết hàng' : cannotAdd ? 'Đã đủ số lượng' : 'Thêm vào giỏ'}
         disabled={cannotAdd}
         onPress={() => {
           addItem(product);
-        }}>
-        <Text style={styles.buttonText}>{product.stock === 0 ? 'Hết hàng' : cannotAdd ? 'Đã đủ số lượng' : 'Thêm vào giỏ'}</Text>
-      </TouchableOpacity>
+        }} />
     </Animated.View>
   );
 }

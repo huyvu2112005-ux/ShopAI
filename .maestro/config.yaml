@@ -1,3 +1,4 @@
 flows:
   - login_home.yaml
   - cart_checkout.yaml
+  - ui_audit.yaml
