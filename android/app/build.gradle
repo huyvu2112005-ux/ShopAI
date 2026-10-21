@@ -118,6 +118,7 @@ android {
         versionCode 10100
         versionName "1.1.0"
         manifestPlaceholders.shopaiCleartextTraffic = 'true'
+        manifestPlaceholders.shopaiUpdatesEnabled = (System.getenv('SHOPAI_DISABLE_OTA') != 'true').toString()
         buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"stable\""
     }
     signingConfigs {

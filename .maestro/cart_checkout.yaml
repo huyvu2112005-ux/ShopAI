@@ -1,0 +1,48 @@
+appId: ${E2E_APP_ID}
+name: Real Login Cart Checkout and Payment
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: allow
+- runFlow: subflows/login.yaml
+- scrollUntilVisible:
+    element:
+      text: iPhone 16 Pro
+    direction: DOWN
+    timeout: 30000
+    centerElement: true
+- tapOn: iPhone 16 Pro
+- extendedWaitUntil:
+    visible:
+      id: add-to-cart
+    timeout: 15000
+- tapOn:
+    id: add-to-cart
+- tapOn: "Gi\u1ecf h\u00e0ng"
+- extendedWaitUntil:
+    visible:
+      id: cart-checkout
+    timeout: 15000
+- assertVisible: iPhone 16 Pro
+- tapOn:
+    id: cart-checkout
+- assertVisible: "X\u00e1c nh\u1eadn \u0111\u01a1n h\u00e0ng"
+- tapOn:
+    id: checkout-confirm
+- extendedWaitUntil:
+    visible: "\u0110\u1eb7t h\u00e0ng th\u00e0nh c\u00f4ng!"
+    timeout: 20000
+- assertVisible: "M\u00e3 \u0111\u01a1n: ORD-.*"
+- takeScreenshot: .maestro/artifacts/order-created
+- tapOn: "Xem l\u1ecbch s\u1eed \u0111\u01a1n h\u00e0ng"
+- extendedWaitUntil:
+    visible: PENDING
+    timeout: 15000
+- tapOn: ORD-.*
+- tapOn:
+    id: order-pay
+- extendedWaitUntil:
+    visible: "Tr\u1ea1ng th\u00e1i: PAID"
+    timeout: 15000
+- takeScreenshot: .maestro/artifacts/order-paid

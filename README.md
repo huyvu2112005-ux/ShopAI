@@ -1,4 +1,6 @@
-# ShopAI — Chương 1–10
+Bài 11: [Kết quả kiểm thử](CHAPTER_11_STATUS.md) · [Cài lên Android qua USB](ANDROID_PHONE_GUIDE.md).
+
+# ShopAI — Chương 1–11
 
 Bảng đối chiếu yêu cầu, các sửa mới, bằng chứng máy ảo và hướng dẫn chạy:
 [CHAPTER_1_10_STATUS.md](CHAPTER_1_10_STATUS.md).

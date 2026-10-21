@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
@@ -49,15 +50,15 @@ function OrderDetailScreen({route}: Props): React.JSX.Element {
         {order.items.map(item => (
           <View key={item.id} style={styles.itemRow}>
             <Text style={styles.itemName}>{item.name} x {item.quantity}</Text>
-            <Text style={styles.itemPrice}>{(item.price * item.quantity).toLocaleString('vi-VN')} đ</Text>
+            <Text style={styles.itemPrice}>{formatCurrency(item.price * item.quantity)}</Text>
           </View>
         ))}
 
-        <Text style={styles.total}>Tổng cộng: {order.total.toLocaleString('vi-VN')} đ</Text>
+        <Text style={styles.total}>Tổng cộng: {formatCurrency(order.total)}</Text>
         {payment.isError && <Text style={styles.missing}>{apiError(payment.error)}</Text>}
         {order.status === 'PENDING' ? (
           <ShopButton
-            title="Thanh toán đơn hàng"
+            testID="order-pay" title="Thanh toán đơn hàng"
             loading={payment.isPending}
             onPress={() => payment.mutate()}
             style={styles.button}

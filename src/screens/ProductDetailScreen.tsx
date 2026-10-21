@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import React, {useState} from 'react';
 
@@ -35,9 +36,6 @@ type ProductDetailScreenProps =
     HomeStackParamList,
     'ProductDetail'
   >;
-
-const formatVnd = (value: number) =>
-  `${new Intl.NumberFormat('vi-VN').format(value)} đ`;
 
 const ProductDetailScreen = ({
   navigation,
@@ -138,9 +136,9 @@ const ProductDetailScreen = ({
           </View>
 
           <View style={styles.priceRow}>
-            <Text style={styles.price}>{formatVnd(product.price)}</Text>
+            <Text style={styles.price}>{formatCurrency(product.price)}</Text>
             <Text style={styles.originalPrice}>
-              {formatVnd(originalPrice)}
+              {formatCurrency(originalPrice)}
             </Text>
             <View style={styles.salePill}>
               <Text style={styles.saleText}>-12%</Text>

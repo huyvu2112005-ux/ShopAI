@@ -95,3 +95,11 @@ chapter9.txt
 .gradle-build/
 android/release-build.log
 .sprint10-check/
+
+.sprint11-check/
+.maestro/artifacts/
+shopai-backend/coverage/
+
+/artifacts/
+fastlane/api_key.json
+fastlane/report.xml

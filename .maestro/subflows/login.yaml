@@ -1,0 +1,16 @@
+appId: ${E2E_APP_ID}
+---
+- tapOn:
+    id: login-email
+- inputText: ${E2E_EMAIL}
+- hideKeyboard
+- tapOn:
+    id: login-password
+- inputText: ${E2E_PASSWORD}
+- hideKeyboard
+- tapOn:
+    id: login-submit
+- extendedWaitUntil:
+    visible: Menu
+    timeout: 30000
+- assertVisible: "Giỏ hàng"

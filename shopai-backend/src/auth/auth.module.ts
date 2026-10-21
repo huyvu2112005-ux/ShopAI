@@ -33,7 +33,7 @@ class JwtStrategy extends PassportStrategy(Strategy) {
  }
 }
 @Injectable()
-class AuthService {
+export class AuthService {
  constructor(private readonly prisma: PrismaService, private readonly jwt: JwtService) {}
  private session(user: {id: string; email: string; name: string | null}) {return {accessToken: this.jwt.sign({sub: user.id, email: user.email}), user: {id: user.id, email: user.email, name: user.name}};}
  async login(dto: LoginDto) {const user = await this.prisma.user.findUnique({where: {email: dto.email.toLowerCase().trim()}}); if (!user || !await bcrypt.compare(dto.password, user.password)) throw new UnauthorizedException('Email hoặc mật khẩu không đúng'); return this.session(user);}

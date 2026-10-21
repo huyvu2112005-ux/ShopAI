@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
@@ -43,7 +44,7 @@ function OrdersScreen(): React.JSX.Element {
                   </Text>
                 </View>
                 <Text style={styles.meta}>{item.items.reduce((sum, product) => sum + product.quantity, 0)} sản phẩm</Text>
-                <Text style={styles.total}>{item.total.toLocaleString('vi-VN')} đ</Text>
+                <Text style={styles.total}>{formatCurrency(item.total)}</Text>
                 <Text style={styles.date}>{new Date(item.createdAt).toLocaleString('vi-VN')}</Text>
               </TouchableOpacity>
             )}

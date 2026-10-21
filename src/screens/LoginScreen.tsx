@@ -120,7 +120,7 @@ const LoginScreen = ({onGoToRegister}: LoginScreenProps): React.JSX.Element => {
             </Text>
 
             <ShopInput
-              placeholder="example@gmail.com"
+              testID="login-email" accessibilityLabel="Email" placeholder="example@gmail.com"
               value={email}
               onChangeText={setEmail}
               keyboardType="email-address"
@@ -137,14 +137,14 @@ const LoginScreen = ({onGoToRegister}: LoginScreenProps): React.JSX.Element => {
               placeholder="Nhập mật khẩu"
               value={password}
               onChangeText={setPassword}
-              secureTextEntry
+              testID="login-password" accessibilityLabel="Password" secureTextEntry
               autoCapitalize="none"
             />
           </View>
 
           <ShopButton
             title="Đăng nhập"
-            onPress={handleLogin}
+            testID="login-submit" onPress={handleLogin}
             loading={loading}
             style={styles.loginButton}
           />

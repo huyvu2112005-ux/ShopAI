@@ -1,0 +1,1 @@
+module.exports = {rootDir: '..', testEnvironment: 'node', testMatch: ['<rootDir>/test/**/*.e2e-spec.ts'], transform: {'[.]tsx?$': ['ts-jest', {tsconfig: 'tsconfig.json'}]}, maxWorkers: 1, testTimeout: 45000};

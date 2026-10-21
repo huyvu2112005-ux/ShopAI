@@ -8,18 +8,22 @@
     "start:dev": "npm run build && node scripts/dev.cjs",
     "db:migrate": "node scripts/migrate.cjs",
     "db:seed": "prisma db seed",
-    "test": "npm run build && node --test test/api.test.cjs test/ai.test.cjs"
+    "test": "npm run test:unit && npm run test:e2e && npm run test:regression",
+    "test:unit": "jest --config jest.config.cjs --runInBand",
+    "test:e2e": "jest --config test/jest-e2e.config.cjs --runInBand",
+    "test:regression": "npm run build && node --test test/api.test.cjs test/ai.test.cjs"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
+    "@google/genai": "^1.0.0",
     "@nestjs/common": "^11.0.0",
-    "@nestjs/core": "^11.0.0",
-    "@nestjs/platform-express": "^11.0.0",
     "@nestjs/config": "^4.0.0",
+    "@nestjs/core": "^11.0.0",
     "@nestjs/jwt": "^11.0.0",
     "@nestjs/passport": "^11.0.0",
+    "@nestjs/platform-express": "^11.0.0",
     "@nestjs/swagger": "^11.0.0",
     "@nestjs/throttler": "^6.0.0",
     "@prisma/client": "6.19.0",
@@ -30,15 +34,20 @@
     "passport": "^0.7.0",
     "passport-jwt": "^4.0.1",
     "reflect-metadata": "^0.2.2",
-    "rxjs": "^7.8.2",
-    "@google/genai": "^1.0.0"
+    "rxjs": "^7.8.2"
   },
   "devDependencies": {
-    "prisma": "6.19.0",
-    "tsx": "^4.20.0",
-    "typescript": "^5.9.0",
-    "@types/node": "^22.0.0",
+    "@nestjs/testing": "^11.2.7",
     "@types/bcrypt": "^6.0.0",
-    "@types/passport-jwt": "^4.0.1"
+    "@types/jest": "^29.5.0",
+    "@types/node": "^22.0.0",
+    "@types/passport-jwt": "^4.0.1",
+    "@types/supertest": "^6.0.3",
+    "jest": "^29.7.0",
+    "prisma": "6.19.0",
+    "supertest": "^7.3.1",
+    "ts-jest": "^29.4.0",
+    "tsx": "^4.20.0",
+    "typescript": "^5.9.0"
   }
 }

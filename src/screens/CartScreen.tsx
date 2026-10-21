@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 
@@ -76,7 +77,7 @@ function CartScreen(): React.JSX.Element {
                       {item.name}
                     </Text>
                     <Text style={styles.itemPrice}>
-                      {item.price.toLocaleString('vi-VN')} đ
+                      {formatCurrency(item.price)}
                     </Text>
                     <View style={styles.quantityRow}>
                       <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Giảm số lượng ${item.name}`} disabled={item.quantity <= 1} onPress={() => setQuantity(item.id, item.quantity - 1)} style={styles.quantityButton}><Text style={styles.quantityControl}>−</Text></TouchableOpacity>
@@ -87,7 +88,7 @@ function CartScreen(): React.JSX.Element {
 
                   <View style={styles.itemActions}>
                     <Text style={styles.itemTotal}>
-                      {(item.price * item.quantity).toLocaleString('vi-VN')} đ
+                      {formatCurrency(item.price * item.quantity)}
                     </Text>
                     <TouchableOpacity
                       onPress={() => removeItem(item.id)}
@@ -103,7 +104,7 @@ function CartScreen(): React.JSX.Element {
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Tạm tính</Text>
                 <Text style={styles.summaryValue}>
-                  {total.toLocaleString('vi-VN')} đ
+                  {formatCurrency(total)}
                 </Text>
               </View>
               <View style={styles.summaryRow}>
@@ -113,10 +114,10 @@ function CartScreen(): React.JSX.Element {
               <View style={styles.divider} />
               <View style={styles.summaryRow}>
                 <Text style={styles.totalLabel}>Tiền sản phẩm</Text>
-                <Text style={styles.totalValue}>{total.toLocaleString('vi-VN')} đ</Text>
+                <Text style={styles.totalValue}>{formatCurrency(total)}</Text>
               </View>
               <TouchableOpacity
-                style={styles.checkoutButton}
+                testID="cart-checkout" style={styles.checkoutButton}
                 onPress={() => navigation.navigate('Checkout')}>
                 <Text style={styles.checkoutText}>Tiến hành thanh toán</Text>
               </TouchableOpacity>

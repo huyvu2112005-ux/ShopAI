@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import {ThemeColors} from '../constants/theme';
 import React from 'react';
@@ -18,9 +19,6 @@ interface Props {
   product: Product;
   onPress?: () => void;
 }
-
-const formatVnd = (value: number) =>
-  `${value.toLocaleString('vi-VN')} đ`;
 
 function ProductCard({product, onPress}: Props) {
   const {styles} = useThemedStyles(makeStyles);
@@ -55,7 +53,7 @@ function ProductCard({product, onPress}: Props) {
           <Text style={styles.stock}>Còn {product.stock}</Text>
         </View>
 
-        <Text style={styles.price}>{formatVnd(product.price)}</Text>
+        <Text style={styles.price}>{formatCurrency(product.price)}</Text>
       </TouchableOpacity>
 
       <TouchableOpacity

@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 import {ActivityIndicator, Pressable, StyleSheet, Text, View} from 'react-native';
@@ -11,8 +12,6 @@ import {
 } from '@constants/shipping';
 import {ThemeColors, SIZES} from '@constants/theme';
 import {useCurrentLocation} from '@hooks/useCurrentLocation';
-
-const formatVnd = (value: number) => `${value.toLocaleString('vi-VN')} đ`;
 
 const LocationBadge = (): React.JSX.Element => {
   const {colors: COLORS, styles} = useThemedStyles(makeStyles);
@@ -48,7 +47,7 @@ const LocationBadge = (): React.JSX.Element => {
             {error ?? 'Chưa rõ vị trí'}
           </Text>
           <Text style={styles.subtitle}>
-            Tạm tính phí ship {formatVnd(DEFAULT_SHIPPING_FEE)}
+            Tạm tính phí ship {formatCurrency(DEFAULT_SHIPPING_FEE)}
           </Text>
         </View>
         <Text style={styles.actionText}>Thử lại</Text>
@@ -76,7 +75,7 @@ const LocationBadge = (): React.JSX.Element => {
           Cách kho {distanceKm.toFixed(1)} km
         </Text>
         <Text style={styles.subtitle}>
-          {tier.label} · Phí ship {formatVnd(tier.fee)}
+          {tier.label} · Phí ship {formatCurrency(tier.fee)}
         </Text>
         <Text style={styles.coords}>
           GPS: {coords.latitude.toFixed(4)}, {coords.longitude.toFixed(4)}

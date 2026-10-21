@@ -1,0 +1,107 @@
+name: ShopAI CI
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: shopai-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  lint:
+    name: Lint and TypeScript
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+          cache: npm
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+  test:
+    name: Mobile tests (Node ${{ matrix.node }})
+    needs: lint
+    runs-on: ubuntu-24.04
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['22.x', '24.x']
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run test:ci
+      - name: Upload coverage
+        if: always() && matrix.node == '24.x'
+        uses: actions/upload-artifact@v7
+        with:
+          name: mobile-coverage
+          path: coverage/
+          if-no-files-found: error
+          retention-days: 7
+  backend-test:
+    name: Nest JWT and Prisma tests
+    runs-on: ubuntu-24.04
+    defaults:
+      run:
+        working-directory: shopai-backend
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+          cache: npm
+          cache-dependency-path: shopai-backend/package-lock.json
+      - run: npm ci
+      - run: npx prisma generate
+      - run: npm test
+  build-android:
+    name: Android QA APK
+    needs: [test, backend-test]
+    if: github.ref == 'refs/heads/main'
+    runs-on: ubuntu-24.04
+    env:
+      APP_ENV: development
+      EXPO_PUBLIC_API_URL: http://127.0.0.1:3000
+      FIREBASE_CONFIGURED: 'false'
+      SHOPAI_LOCAL_QA: 'true'
+      SHOPAI_DISABLE_OTA: 'true'
+    steps:
+      - uses: actions/checkout@v7
+      - uses: actions/setup-node@v7
+        with:
+          node-version: '24.x'
+          cache: npm
+      - uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '17'
+      - uses: actions/cache@v6
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('android/**/*.gradle*', 'android/gradle/wrapper/gradle-wrapper.properties', 'patches/**') }}
+          restore-keys: ${{ runner.os }}-gradle-
+      - run: npm ci
+      - name: Install exact Android toolchain
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager 'platforms;android-37' 'build-tools;37.0.0' 'ndk;27.1.12297006' 'cmake;3.22.1'
+      - name: Build Debug APK (Metro required)
+        working-directory: android
+        run: bash ./gradlew :app:assembleDebug -PreactNativeArchitectures=x86_64 --max-workers=2 --no-daemon --console=plain
+      - uses: actions/upload-artifact@v7
+        with:
+          name: shopai-debug-apk
+          path: android/app/build/outputs/apk/debug/app-debug.apk
+          if-no-files-found: error
+          retention-days: 14

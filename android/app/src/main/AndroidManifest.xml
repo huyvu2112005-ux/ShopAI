@@ -16,7 +16,7 @@
       android:usesCleartextTraffic="${shopaiCleartextTraffic}"
       android:supportsRtl="true">
 
-      <meta-data android:name="expo.modules.updates.ENABLED" android:value="true" />
+      <meta-data android:name="expo.modules.updates.ENABLED" android:value="${shopaiUpdatesEnabled}" />
       <meta-data android:name="expo.modules.updates.EXPO_UPDATE_URL" android:value="https://u.expo.dev/398db7e1-1c5f-474a-b2ce-db8d4a308fec" />
       <meta-data android:name="expo.modules.updates.EXPO_RUNTIME_VERSION" android:value="@string/expo_runtime_version" />
       <meta-data android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH" android:value="ALWAYS" />

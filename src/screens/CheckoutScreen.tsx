@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import React, {useRef} from 'react';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
@@ -71,7 +72,7 @@ function CheckoutScreen(): React.JSX.Element {
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Tổng cộng</Text>
-          <Text style={styles.total}>{total.toLocaleString('vi-VN')} đ</Text>
+          <Text style={styles.total}>{formatCurrency(total)}</Text>
         </View>
         {mutation.isError && (
           <Text style={styles.error}>{apiError(mutation.error)}</Text>
@@ -80,7 +81,7 @@ function CheckoutScreen(): React.JSX.Element {
           <ActivityIndicator color={COLORS.primary} size="large" style={styles.loader} />
         ) : (
           <ShopButton
-            title="Xác nhận đặt hàng"
+            testID="checkout-confirm" title="Xác nhận đặt hàng"
             onPress={() => {
               if (submitting.current || !items.length) {return;}
               submitting.current = true;

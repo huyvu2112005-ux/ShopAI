@@ -1,0 +1,10 @@
+appId: ${E2E_APP_ID}
+name: Real Login to Home
+---
+- launchApp:
+    clearState: true
+    permissions:
+      all: allow
+- runFlow: subflows/login.yaml
+- assertVisible: ShopAI
+- takeScreenshot: .maestro/artifacts/login-home

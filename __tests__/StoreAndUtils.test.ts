@@ -1,0 +1,50 @@
+import {Platform, Vibration} from 'react-native';
+import {hapticLight, hapticMedium, hapticSuccess, hapticError, setHapticsEnabled} from '../src/utils/haptics';
+import {productCodeFromScan} from '../src/utils/scanCode';
+import {useOrderStore, OrderRecord} from '../src/store/useOrderStore';
+import {store} from '../src/store/redux/store';
+import {addToCart, removeProduct, clearCart} from '../src/store/redux/cartSlice';
+import {increment, decrement, resetCounter} from '../src/store/redux/counterSlice';
+beforeEach(() => {jest.clearAllMocks(); setHapticsEnabled(true);});
+afterEach(() => {jest.restoreAllMocks(); setHapticsEnabled(true);});
+test('haptic levels respect platform, user preference and unavailable native hardware', () => {
+  const vibrate = jest.spyOn(Vibration, 'vibrate').mockImplementation(() => {});
+  jest.replaceProperty(Platform, 'OS', 'android');
+  hapticLight(); hapticMedium(); hapticSuccess(); hapticError();
+  expect(vibrate.mock.calls).toEqual([[20], [40], [30], [[0, 60, 80, 60, 80, 60]]]);
+  jest.replaceProperty(Platform, 'OS', 'ios'); hapticSuccess();
+  expect(vibrate).toHaveBeenLastCalledWith(1);
+  setHapticsEnabled(false); vibrate.mockClear(); hapticSuccess(); expect(vibrate).not.toHaveBeenCalled();
+  setHapticsEnabled(true); vibrate.mockImplementation(() => {throw Error('hardware unavailable');});
+  jest.spyOn(console, 'log').mockImplementation(() => {});
+  expect(() => hapticMedium()).not.toThrow();
+});
+test('scan normalization accepts raw barcodes, links, fragments and malformed escapes', () => {
+  expect(productCodeFromScan(' 8936117530045 ')).toBe('8936117530045');
+  expect(productCodeFromScan('SHOPAI://product/phone%201?source=qr')).toBe('phone 1');
+  expect(productCodeFromScan('shopai://product/phone#details')).toBe('phone');
+  expect(productCodeFromScan('%bad')).toBe('%bad');
+});
+test('legacy order store preserves other statuses and handles missing identifiers', () => {
+  useOrderStore.setState({orders: []});
+  const order: OrderRecord = {id: 'one', items: [], total: 0, status: 'PENDING', createdAt: '2026-01-01'};
+  useOrderStore.getState().addOrder(order);
+  useOrderStore.getState().addOrder({...order, id: 'two'});
+  useOrderStore.getState().markPaid('one');
+  expect(useOrderStore.getState().getById('one')?.status).toBe('PAID');
+  expect(useOrderStore.getState().getById('two')?.status).toBe('PENDING');
+  expect(useOrderStore.getState().getById('missing')).toBeUndefined();
+});
+test('Redux practice actions remain independent and reject invalid payloads', () => {
+  store.dispatch(resetCounter()); store.dispatch(increment()); store.dispatch(decrement());
+  expect(store.getState().counter.value).toBe(0);
+  store.dispatch(clearCart());
+  const item = {id: 'demo', name: 'Demo', image: {uri: 'https://example.com/a.jpg'}, price: 100};
+  store.dispatch(addToCart(item)); store.dispatch(addToCart({...item, quantity: 2}));
+  expect(store.getState().cart.items[0].quantity).toBe(3);
+  store.dispatch(addToCart({...item, quantity: 0})); store.dispatch(addToCart({...item, price: -1})); store.dispatch(addToCart({...item, price: NaN}));
+  expect(store.getState().cart.items[0].quantity).toBe(3);
+  store.dispatch(addToCart({...item, id: 'other'})); store.dispatch(removeProduct(item.id));
+  expect(store.getState().cart.items.map(value => value.id)).toEqual(['other']);
+  store.dispatch(clearCart()); expect(store.getState().cart.items).toEqual([]);
+});

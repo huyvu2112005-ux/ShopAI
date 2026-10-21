@@ -1,3 +1,4 @@
+import {formatCurrency} from '@utils/formatCurrency';
 import {useThemedStyles} from '../hooks/useThemedStyles';
 import React, {useCallback, useMemo, useState} from 'react';
 
@@ -55,9 +56,6 @@ type HomeScreenProps =
     HomeStackParamList,
     'Home'
   >;
-
-const formatVnd = (value: number) =>
-  `${value.toLocaleString('vi-VN')} đ`;
 
 const categoryShortName = (category: string) => {
   if (category === 'Điện thoại') {
@@ -305,7 +303,7 @@ const HomeScreen = ({
                   {scannedProduct.category} · Còn {scannedProduct.stock}
                 </Text>
                 <Text style={styles.scannedProductPrice}>
-                  {formatVnd(scannedProduct.price)}
+                  {formatCurrency(scannedProduct.price)}
                 </Text>
               </View>
 
@@ -353,7 +351,7 @@ const HomeScreen = ({
         'left',
         'right',
       ]}>
-      <FlashList
+      <FlashList testID="products-list"
         data={filteredProducts}
         keyExtractor={item => item.id}
         renderItem={({item}) => (
