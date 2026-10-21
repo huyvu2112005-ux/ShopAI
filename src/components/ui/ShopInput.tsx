@@ -1,3 +1,4 @@
+import {useThemedStyles} from '../../hooks/useThemedStyles';
 import React from 'react';
 import {
   View,
@@ -9,7 +10,7 @@ import {
 import Typography from '@components/ui/Typography';
 
 import {
-  COLORS,
+  ThemeColors,
   SIZES,
 } from '@constants/theme';
 
@@ -24,6 +25,8 @@ export default function ShopInput({
   style,
   ...props
 }: ShopInputProps) {
+  const {colors: COLORS, styles} = useThemedStyles(makeStyles);
+
   return (
     <View style={styles.container}>
       {label ? (
@@ -36,6 +39,7 @@ export default function ShopInput({
 
       <TextInput
         {...props}
+        accessibilityLabel={props.accessibilityLabel ?? label}
         style={[
           styles.input,
           error ? styles.inputError : null,
@@ -56,7 +60,7 @@ export default function ShopInput({
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   container: {
     width: '100%',
     marginBottom: 16,

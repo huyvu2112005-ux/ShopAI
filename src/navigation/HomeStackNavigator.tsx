@@ -9,6 +9,7 @@ import HomeScreen from '../screens/HomeScreen';
 import ProductDetailScreen from '../screens/ProductDetailScreen';
 import LayoutScreen from '../screens/LayoutScreen';
 import ScannerScreen from '../screens/ScannerScreen';
+import AIChatScreen from '../screens/AIChatScreen';
 
 
 import {
@@ -74,6 +75,7 @@ function HomeStackNavigator(): React.JSX.Element {
       />
 
 
+      <Stack.Screen name="AIChat" component={AIChatScreen} options={{headerShown: true, title: 'Trợ lý ShopAI'}} />
     </Stack.Navigator>
 
   );

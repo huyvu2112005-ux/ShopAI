@@ -1,4 +1,9 @@
+import {useThemedStyles} from '../hooks/useThemedStyles';
 import React, {useState} from 'react';
+import axiosClient from '../api/axiosClient';
+import {apiError} from '../services/shopApi';
+import {SessionSchema} from '../types/shop.schema';
+import {useAuthStore} from '../store/useAuthStore';
 
 import {
   Alert,
@@ -12,7 +17,7 @@ import {
 
 import ShopButton from '@components/ui/ShopButton';
 import ShopInput from '@components/ui/ShopInput';
-import {COLORS, SIZES} from '@constants/theme';
+import {ThemeColors, SIZES} from '@constants/theme';
 
 interface RegisterScreenProps {
   onRegisterSuccess: () => void;
@@ -20,16 +25,19 @@ interface RegisterScreenProps {
 }
 
 const RegisterScreen = ({
-  onRegisterSuccess,
   onGoToLogin,
 }: RegisterScreenProps): React.JSX.Element => {
+  const {styles} = useThemedStyles(makeStyles);
+
+  const [loading, setLoading] = useState(false);
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] =
     useState('');
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
+    if (loading) {return;}
     const cleanName = fullName.trim();
     const cleanEmail = email.trim();
 
@@ -89,16 +97,17 @@ const RegisterScreen = ({
       return;
     }
 
-    Alert.alert(
-      'Đăng ký thành công',
-      'Tài khoản ShopAI đã được tạo.',
-      [
-        {
-          text: 'Tiếp tục',
-          onPress: onRegisterSuccess,
-        },
-      ],
-    );
+    setLoading(true);
+    try {
+      const {data} = await axiosClient.post('/api/auth/register', {
+        name: cleanName, email: cleanEmail, password,
+      });
+      await useAuthStore.getState().login(SessionSchema.parse(data).accessToken);
+    } catch (error) {
+      Alert.alert('Đăng ký thất bại', apiError(error));
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -197,6 +206,7 @@ const RegisterScreen = ({
           <ShopButton
             title="Tạo tài khoản"
             onPress={handleRegister}
+            loading={loading}
             style={styles.registerButton}
           />
 
@@ -218,7 +228,7 @@ const RegisterScreen = ({
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -246,7 +256,7 @@ const styles = StyleSheet.create({
   },
 
   logoText: {
-    color: '#FFFFFF',
+    color: COLORS.onPrimary,
     fontSize: 34,
     fontWeight: '800',
   },

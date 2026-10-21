@@ -1,6 +1,6 @@
 export const COLORS = {
   primary: '#FF4D4F',
-  secondary: '#1890FF',
+  secondary: '#FF4D4F',
 
   background: '#F5F5F5',
   surface: '#FFFFFF',
@@ -12,9 +12,15 @@ export const COLORS = {
 
   error: '#FF0000',
   success: '#52C41A',
+  onPrimary: '#FFFFFF',
+  primarySoft: '#FFF0F1',
+  successSoft: '#F0FBF4',
+  warningSoft: '#FFF8E8',
+  mutedSurface: '#F7F8FA',
 };
 
 export const DARK_COLORS = {
+  ...COLORS,
   background: '#121212',
   surface: '#1E1E1E',
 
@@ -22,7 +28,13 @@ export const DARK_COLORS = {
   textLight: '#B0B0B0',
 
   border: '#333333',
+  primarySoft: '#351F2B',
+  successSoft: '#162D24',
+  warningSoft: '#352C1A',
+  mutedSurface: '#252A32',
 };
+
+export type ThemeColors = typeof COLORS;
 
 export const SIZES = {
   base: 8,

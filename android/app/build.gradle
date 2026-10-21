@@ -1,12 +1,45 @@
 apply plugin: "com.android.application"
 apply plugin: "org.jetbrains.kotlin.android"
 apply plugin: "com.facebook.react"
+if (file('google-services.json').exists()) {
+    apply plugin: 'com.google.gms.google-services'
+    apply plugin: 'com.google.firebase.crashlytics'
+}
+
+def projectRoot = rootDir.getAbsoluteFile().getParentFile().getAbsolutePath()
+def localSigningFile = new File(projectRoot, '.private/android-signing.properties')
+if (localSigningFile.exists()) {
+    def localSigning = new Properties()
+    localSigningFile.withInputStream { localSigning.load(it) }
+    localSigning.each { key, value ->
+        if (!project.hasProperty(key.toString())) {
+            project.ext.set(key.toString(), value)
+        }
+    }
+}
+def releaseStoreFile = findProperty('MYAPP_RELEASE_STORE_FILE')
+def hasReleaseSigning = releaseStoreFile != null &&
+    findProperty('MYAPP_RELEASE_STORE_PASSWORD') != null &&
+    findProperty('MYAPP_RELEASE_KEY_ALIAS') != null &&
+    findProperty('MYAPP_RELEASE_KEY_PASSWORD') != null &&
+    file(releaseStoreFile).exists()
+def hasFirebaseConfig = file('google-services.json').exists()
+def localQaBuild = System.getenv('SHOPAI_LOCAL_QA') == 'true'
+gradle.taskGraph.whenReady { graph ->
+    if (!localQaBuild && System.getenv('EAS_BUILD') != 'true' && !hasReleaseSigning && graph.allTasks.any { it.project == project && it.name.toLowerCase().contains('release') }) {
+        throw new GradleException('Release requires a private signing key. Run npm run release:keystore or configure release signing properties.')
+    }
+}
 
 /**
  * This is the configuration block to customize your React Native Android app.
  * By default you don't need to apply any configuration, just uncomment the lines you need.
  */
 react {
+    entryFile = file(["node", "-e", "require('expo/scripts/resolveAppEntry')", projectRoot, "android", "absolute"].execute(null, rootDir).text.trim())
+    cliFile = new File(["node", "--print", "require.resolve('@expo/cli', { paths: [require.resolve('expo/package.json')] })"].execute(null, rootDir).text.trim())
+    bundleCommand = "export:embed"
+    extraPackagerArgs = ["--reset-cache"]
     /* Folders */
     //   The root of your project, i.e. where "package.json" lives. Default is '../..'
     // root = file("../../")
@@ -57,7 +90,7 @@ react {
 /**
  * Set this to true to Run Proguard on Release builds to minify the Java bytecode.
  */
-def enableProguardInReleaseBuilds = false
+def enableProguardInReleaseBuilds = true
 
 /**
  * The preferred build flavor of JavaScriptCore (JSC)
@@ -82,8 +115,10 @@ android {
         applicationId "com.shopai"
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
-        versionName "1.0"
+        versionCode 10100
+        versionName "1.1.0"
+        manifestPlaceholders.shopaiCleartextTraffic = 'true'
+        buildConfigField "String", "REACT_NATIVE_RELEASE_LEVEL", "\"stable\""
     }
     signingConfigs {
         debug {
@@ -92,17 +127,36 @@ android {
             keyAlias 'androiddebugkey'
             keyPassword 'android'
         }
+        release {
+            if (hasReleaseSigning) {
+                storeFile file(releaseStoreFile)
+                storePassword findProperty('MYAPP_RELEASE_STORE_PASSWORD')
+                keyAlias findProperty('MYAPP_RELEASE_KEY_ALIAS')
+                keyPassword findProperty('MYAPP_RELEASE_KEY_PASSWORD')
+            }
+        }
     }
     buildTypes {
         debug {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
+            // Local builds remain possible before a private upload key is provisioned.
+            if (localQaBuild && !hasFirebaseConfig) {
+                applicationIdSuffix '.qa'
+            }
+            // Replace with a private release keystore before Google Play distribution.
+            signingConfig hasReleaseSigning ? signingConfigs.release : signingConfigs.debug
+            manifestPlaceholders.shopaiCleartextTraffic = localQaBuild ? 'true' : 'false'
             minifyEnabled enableProguardInReleaseBuilds
+            shrinkResources true
             proguardFiles getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro"
+            if (hasFirebaseConfig) {
+                firebaseCrashlytics {
+                    mappingFileUploadEnabled true
+                    nativeSymbolUploadEnabled false
+                }
+            }
         }
     }
 }

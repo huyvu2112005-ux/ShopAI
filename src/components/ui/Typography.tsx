@@ -7,9 +7,9 @@ import {
 } from 'react-native';
 
 import {
-  COLORS,
   FONTS,
 } from '@constants/theme';
+import {useThemeColors} from '../../contexts/ThemeContext';
 
 type TypographyVariant =
   | 'h1'
@@ -27,18 +27,19 @@ type TypographyProps = TextProps & {
 
 export default function Typography({
   variant = 'body1',
-  color = COLORS.text,
+  color,
   style,
   children,
   ...props
 }: TypographyProps) {
+  const colors = useThemeColors();
   return (
     <Text
       {...props}
       style={[
         FONTS[variant],
         {
-          color,
+          color: color ?? colors.text,
         },
         style,
       ]}>

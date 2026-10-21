@@ -1,4 +1,8 @@
+import {useThemedStyles} from '../hooks/useThemedStyles';
 import React, {useState} from 'react';
+import axiosClient from '../api/axiosClient';
+import {apiError} from '../services/shopApi';
+import {SessionSchema} from '../types/shop.schema';
 
 import {
   Alert,
@@ -12,7 +16,7 @@ import {
 
 import ShopButton from '@components/ui/ShopButton';
 import ShopInput from '@components/ui/ShopInput';
-import {COLORS, SIZES} from '@constants/theme';
+import {ThemeColors, SIZES} from '@constants/theme';
 import {useAuthStore} from '../store/useAuthStore';
 
 interface LoginScreenProps {
@@ -20,11 +24,15 @@ interface LoginScreenProps {
 }
 
 const LoginScreen = ({onGoToRegister}: LoginScreenProps): React.JSX.Element => {
+  const {styles} = useThemedStyles(makeStyles);
+
   const login = useAuthStore(state => state.login);
   const [email, setEmail] = useState('');
+  const [loading, setLoading] = useState(false);
   const [password, setPassword] = useState('');
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
+    if (loading) {return;}
     const cleanEmail = email.trim();
 
     if (!cleanEmail) {
@@ -59,7 +67,13 @@ const LoginScreen = ({onGoToRegister}: LoginScreenProps): React.JSX.Element => {
       return;
     }
 
-    login('demo-token');
+    setLoading(true);
+    try {
+      const {data} = await axiosClient.post('/api/auth/login', {email: cleanEmail, password});
+      await login(SessionSchema.parse(data).accessToken);
+    } catch (error) {Alert.alert('Đăng nhập thất bại', apiError(error));}
+    finally {setLoading(false);}
+
   };
 
   return (
@@ -131,6 +145,7 @@ const LoginScreen = ({onGoToRegister}: LoginScreenProps): React.JSX.Element => {
           <ShopButton
             title="Đăng nhập"
             onPress={handleLogin}
+            loading={loading}
             style={styles.loginButton}
           />
 
@@ -152,7 +167,7 @@ const LoginScreen = ({onGoToRegister}: LoginScreenProps): React.JSX.Element => {
   );
 };
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor:
@@ -182,7 +197,7 @@ const styles = StyleSheet.create({
   },
 
   logoText: {
-    color: '#FFFFFF',
+    color: COLORS.onPrimary,
     fontSize: 36,
     fontWeight: '800',
   },

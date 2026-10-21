@@ -1,37 +1,45 @@
-import React from 'react';
+import {useThemedStyles} from '../hooks/useThemedStyles';
+import React, {useRef} from 'react';
 import {ActivityIndicator, StyleSheet, Text, View} from 'react-native';
-import {useMutation} from '@tanstack/react-query';
+import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import ShopButton from '../components/ui/ShopButton';
-import {COLORS, SIZES} from '../constants/theme';
+import {ThemeColors, SIZES} from '../constants/theme';
 import {useCartStore} from '../store/useCartStore';
-import {useOrderStore} from '../store/useOrderStore';
-
-const createOrder = async (): Promise<{id: string}> => {
-  await new Promise<void>(resolve => setTimeout(resolve, 700));
-  return {id: `ORD-${Date.now().toString().slice(-6)}`};
-};
+import {apiError, createOrder} from '../services/shopApi';
+import {addCrashBreadcrumb, recordNonFatal, setCrashContext} from '../services/crashReporting';
 
 function CheckoutScreen(): React.JSX.Element {
+  const {colors: COLORS, styles} = useThemedStyles(makeStyles);
+
   const navigation = useNavigation<any>();
   const items = useCartStore(state => state.items);
-  const clearCart = useCartStore(state => state.clearCart);
+  const completeCheckout = useCartStore(state => state.completeCheckout);
+  const submitting = useRef(false);
   const total = useCartStore(state => state.totalPrice());
-  const addOrder = useOrderStore(state => state.addOrder);
+  const queryClient = useQueryClient();
 
   const mutation = useMutation({
-    mutationFn: createOrder,
-    onSuccess: result => {
-      addOrder({
-        id: result.id,
-        items: [...items],
-        total,
-        status: 'PENDING',
-        createdAt: new Date().toISOString(),
+    onMutate: () => {
+      addCrashBreadcrumb(`Checkout: bắt đầu đặt đơn, ${items.length} loại sản phẩm`);
+      setCrashContext({
+        screen: 'CheckoutScreen',
+        cart_item_count: String(items.length),
+        cart_total: String(total),
       });
-      clearCart();
+    },
+    mutationFn: createOrder,
+    onSuccess: (_order, submitted) => {
+      addCrashBreadcrumb('Checkout: server xác nhận đơn hàng thành công');
+      queryClient.invalidateQueries({queryKey: ['orders']});
+      completeCheckout(submitted.items.map(item => ({id: item.productId, quantity: item.quantity})));
+    },
+    onSettled: () => {submitting.current = false;},
+    onError: error => {
+      addCrashBreadcrumb(`Checkout: đặt đơn thất bại - ${apiError(error)}`);
+      recordNonFatal(error, 'CheckoutOrderFailed');
     },
   });
 
@@ -63,17 +71,21 @@ function CheckoutScreen(): React.JSX.Element {
         </View>
         <View style={styles.row}>
           <Text style={styles.label}>Tổng cộng</Text>
-          <Text style={styles.total}>{total.toLocaleString()} đ</Text>
+          <Text style={styles.total}>{total.toLocaleString('vi-VN')} đ</Text>
         </View>
         {mutation.isError && (
-          <Text style={styles.error}>Đặt hàng thất bại, vui lòng thử lại.</Text>
+          <Text style={styles.error}>{apiError(mutation.error)}</Text>
         )}
         {mutation.isPending ? (
           <ActivityIndicator color={COLORS.primary} size="large" style={styles.loader} />
         ) : (
           <ShopButton
             title="Xác nhận đặt hàng"
-            onPress={() => mutation.mutate()}
+            onPress={() => {
+              if (submitting.current || !items.length) {return;}
+              submitting.current = true;
+              mutation.mutate({items: items.map(item => ({productId: item.id, quantity: item.quantity})), total});
+            }}
             disabled={items.length === 0}
             style={styles.button}
           />
@@ -83,7 +95,7 @@ function CheckoutScreen(): React.JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   safeArea: {flex: 1, backgroundColor: COLORS.background},
   container: {flex: 1, padding: SIZES.padding},
   center: {flex: 1, alignItems: 'center', justifyContent: 'center', padding: SIZES.padding},

@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react';
+import React, {useCallback, useEffect, useRef, useState} from 'react';
 import {
   View,
   Text,
@@ -18,14 +18,19 @@ export default function FetchDemo() {
   const [posts, setPosts] = useState<Post[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const pending = useRef<AbortController | null>(null);
 
-  const fetchPosts = async () => {
+  const fetchPosts = useCallback(async () => {
+    pending.current?.abort();
+    const controller = new AbortController();
+    pending.current = controller;
     try {
       setLoading(true);
       setError('');
 
       const response = await fetch(
         'https://jsonplaceholder.typicode.com/posts?_limit=10',
+        {signal: controller.signal},
       );
 
       if (!response.ok) {
@@ -34,17 +39,18 @@ export default function FetchDemo() {
 
       const data: Post[] = await response.json();
 
-      setPosts(data);
+      if (!controller.signal.aborted) {setPosts(data);}
     } catch {
-      setError('Đã xảy ra lỗi khi tải dữ liệu.');
+      if (!controller.signal.aborted) {setError('Đã xảy ra lỗi khi tải dữ liệu.');}
     } finally {
-      setLoading(false);
+      if (!controller.signal.aborted) {setLoading(false);}
     }
-  };
+  }, []);
 
   useEffect(() => {
     fetchPosts();
-  }, []);
+    return () => pending.current?.abort();
+  }, [fetchPosts]);
 
   if (loading) {
     return (

@@ -28,7 +28,7 @@ export const hapticSuccess = () => {
     return;
   }
 
-  safeVibrate([0, 30, 60, 30]);
+  safeVibrate(30);
 };
 
 export const hapticError = () => safeVibrate([0, 60, 80, 60, 80, 60]);

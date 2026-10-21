@@ -1,20 +1,25 @@
+import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import {useNavigation} from '@react-navigation/native';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
-import {COLORS, SIZES} from '../constants/theme';
-import {useOrderStore} from '../store/useOrderStore';
+import {ThemeColors, SIZES} from '../constants/theme';
+import {useQuery} from '@tanstack/react-query';
+import {apiError, getOrders} from '../services/shopApi';
+import ShopButton from '../components/ui/ShopButton';
 
 function OrdersScreen(): React.JSX.Element {
+  const {styles} = useThemedStyles(makeStyles);
+
   const navigation = useNavigation<any>();
-  const orders = useOrderStore(state => state.orders);
+  const {data: orders = [], isLoading, error, refetch, isRefetching} = useQuery({queryKey: ['orders'], queryFn: getOrders});
 
   return (
     <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
       <View style={styles.container}>
         <Text style={styles.title}>Đơn hàng của tôi</Text>
-        {orders.length === 0 ? (
+        {isLoading ? <Text>Đang tải đơn hàng...</Text> : error ? <View><Text>{apiError(error)}</Text><ShopButton title="Thử lại" onPress={() => {refetch();}} /></View> : orders.length === 0 ? (
           <View style={styles.empty}>
             <Text style={styles.emptyIcon}>📦</Text>
             <Text style={styles.emptyText}>Chưa có đơn hàng nào.</Text>
@@ -23,6 +28,8 @@ function OrdersScreen(): React.JSX.Element {
         ) : (
           <FlatList
             data={orders}
+            refreshing={isRefetching}
+            onRefresh={() => {refetch();}}
             keyExtractor={item => item.id}
             showsVerticalScrollIndicator={false}
             renderItem={({item}) => (
@@ -35,8 +42,8 @@ function OrdersScreen(): React.JSX.Element {
                     {item.status}
                   </Text>
                 </View>
-                <Text style={styles.meta}>{item.items.length} sản phẩm</Text>
-                <Text style={styles.total}>{item.total.toLocaleString()} đ</Text>
+                <Text style={styles.meta}>{item.items.reduce((sum, product) => sum + product.quantity, 0)} sản phẩm</Text>
+                <Text style={styles.total}>{item.total.toLocaleString('vi-VN')} đ</Text>
                 <Text style={styles.date}>{new Date(item.createdAt).toLocaleString('vi-VN')}</Text>
               </TouchableOpacity>
             )}
@@ -47,7 +54,7 @@ function OrdersScreen(): React.JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   safeArea: {flex: 1, backgroundColor: COLORS.background},
   container: {flex: 1, padding: SIZES.padding},
   title: {fontSize: SIZES.h1, fontWeight: '800', color: COLORS.text, marginBottom: 18},

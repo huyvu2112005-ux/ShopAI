@@ -1,7 +1,11 @@
+const fs = require('node:fs');
+const path = require('node:path');
+if (process.env.FIREBASE_CONFIGURED === undefined) {
+  process.env.FIREBASE_CONFIGURED = String(fs.existsSync(path.join(__dirname, 'android/app/google-services.json')));
+}
+
 module.exports = {
-  presets: [
-    'module:@react-native/babel-preset',
-  ],
+  presets: ['babel-preset-expo'],
 
   plugins: [
     [
@@ -27,6 +31,10 @@ module.exports = {
     ],
 
     '@babel/plugin-transform-export-namespace-from',
+
+    ['transform-inline-environment-variables', {
+      include: ['APP_ENV', 'FIREBASE_CONFIGURED'],
+    }],
 
     'react-native-worklets/plugin',
   ],

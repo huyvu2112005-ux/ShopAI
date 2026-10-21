@@ -1,24 +1,37 @@
+import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 import {ScrollView, StyleSheet, Text, View} from 'react-native';
 import {NativeStackScreenProps} from '@react-navigation/native-stack';
 import {SafeAreaView} from 'react-native-safe-area-context';
 
 import ShopButton from '../components/ui/ShopButton';
-import {COLORS, SIZES} from '../constants/theme';
-import {useOrderStore} from '../store/useOrderStore';
+import {ThemeColors, SIZES} from '../constants/theme';
+import {useMutation, useQuery, useQueryClient} from '@tanstack/react-query';
+import {apiError, getOrder, payOrder} from '../services/shopApi';
 import {AppStackParamList} from '../types/navigationTypes';
 
 type Props = NativeStackScreenProps<AppStackParamList, 'OrderDetail'>;
 
 function OrderDetailScreen({route}: Props): React.JSX.Element {
-  const order = useOrderStore(state => state.getById(route.params.orderId));
-  const markPaid = useOrderStore(state => state.markPaid);
+  const {styles} = useThemedStyles(makeStyles);
+
+  const queryClient = useQueryClient();
+  const {data: order, isLoading, error, refetch} = useQuery({queryKey: ['orders', route.params.orderId], queryFn: () => getOrder(route.params.orderId)});
+  const payment = useMutation({
+    mutationFn: () => payOrder(route.params.orderId),
+    onSuccess: paidOrder => {
+      queryClient.setQueryData(['orders', paidOrder.id], paidOrder);
+      queryClient.invalidateQueries({queryKey: ['orders']});
+    },
+  });
+  if (isLoading) {return <SafeAreaView style={styles.safeArea}><Text>Đang tải hóa đơn...</Text></SafeAreaView>;}
 
   if (!order) {
     return (
       <SafeAreaView style={styles.safeArea}>
         <View style={styles.center}>
-          <Text style={styles.missing}>Không tìm thấy đơn hàng.</Text>
+          <Text style={styles.missing}>{error ? apiError(error) : 'Không tìm thấy đơn hàng.'}</Text>
+          <ShopButton title="Thử lại" onPress={() => {refetch();}} />
         </View>
       </SafeAreaView>
     );
@@ -36,15 +49,17 @@ function OrderDetailScreen({route}: Props): React.JSX.Element {
         {order.items.map(item => (
           <View key={item.id} style={styles.itemRow}>
             <Text style={styles.itemName}>{item.name} x {item.quantity}</Text>
-            <Text style={styles.itemPrice}>{(item.price * item.quantity).toLocaleString()} đ</Text>
+            <Text style={styles.itemPrice}>{(item.price * item.quantity).toLocaleString('vi-VN')} đ</Text>
           </View>
         ))}
 
-        <Text style={styles.total}>Tổng cộng: {order.total.toLocaleString()} đ</Text>
+        <Text style={styles.total}>Tổng cộng: {order.total.toLocaleString('vi-VN')} đ</Text>
+        {payment.isError && <Text style={styles.missing}>{apiError(payment.error)}</Text>}
         {order.status === 'PENDING' ? (
           <ShopButton
-            title="Thanh toán giả lập"
-            onPress={() => markPaid(order.id)}
+            title="Thanh toán đơn hàng"
+            loading={payment.isPending}
+            onPress={() => payment.mutate()}
             style={styles.button}
           />
         ) : (
@@ -55,7 +70,7 @@ function OrderDetailScreen({route}: Props): React.JSX.Element {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   safeArea: {flex: 1, backgroundColor: COLORS.background},
   container: {padding: SIZES.padding},
   center: {flex: 1, alignItems: 'center', justifyContent: 'center'},

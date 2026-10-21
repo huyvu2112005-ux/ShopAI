@@ -1,0 +1,602 @@
+[
+  {
+    "id": "backend_prod_0",
+    "name": "iPhone 16 Pro",
+    "price": 28990000,
+    "image": "/assets/products/iphone-16-pro.jpg",
+    "barcode": "8936117530045",
+    "category": "Điện thoại",
+    "rating": 4.9,
+    "stock": 12,
+    "description": "iPhone 16 Pro là mẫu smartphone cao cấp của Apple, phù hợp cho người dùng cần hiệu năng mạnh, camera chất lượng cao và hệ sinh thái iOS ổn định.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "6.3 inch"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "128GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "5G"
+      },
+      {
+        "label": "Cổng sạc",
+        "value": "USB-C"
+      }
+    ],
+    "legacyId": "iphone-16-pro"
+  },
+  {
+    "id": "backend_prod_1",
+    "name": "Samsung Galaxy S25 Ultra",
+    "price": 30990000,
+    "image": "/assets/products/galaxy-s25-ultra.jpg",
+    "barcode": "8936117530046",
+    "category": "Điện thoại",
+    "rating": 4.9,
+    "stock": 9,
+    "description": "Galaxy S25 Ultra là smartphone cao cấp hướng đến người dùng cần màn hình lớn, khả năng đa nhiệm, camera linh hoạt và bút S Pen.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "6.9 inch"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "256GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "5G"
+      },
+      {
+        "label": "Bút",
+        "value": "S Pen"
+      }
+    ],
+    "legacyId": "galaxy-s25-ultra"
+  },
+  {
+    "id": "backend_prod_2",
+    "name": "MacBook Air M4 13-inch",
+    "price": 26990000,
+    "image": "/assets/products/macbook-air-m4.jpg",
+    "barcode": "8936117530047",
+    "category": "Laptop",
+    "rating": 4.8,
+    "stock": 7,
+    "description": "MacBook Air 13-inch là laptop mỏng nhẹ dành cho học tập, văn phòng và công việc sáng tạo, với thời lượng pin tốt và thiết kế gọn nhẹ.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "13 inch"
+      },
+      {
+        "label": "Chip",
+        "value": "Apple M4"
+      },
+      {
+        "label": "RAM",
+        "value": "16GB"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "256GB SSD"
+      }
+    ],
+    "legacyId": "macbook-air-m4"
+  },
+  {
+    "id": "backend_prod_3",
+    "name": "iPad Air M3 11-inch",
+    "price": 16990000,
+    "image": "/assets/products/ipad-air-m3.jpg",
+    "barcode": "8936117530048",
+    "category": "Máy tính bảng",
+    "rating": 4.8,
+    "stock": 15,
+    "description": "iPad Air 11-inch phù hợp cho học tập, giải trí và làm việc di động nhờ thiết kế mỏng nhẹ, màn hình lớn và hiệu năng tốt.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "11 inch"
+      },
+      {
+        "label": "Chip",
+        "value": "Apple M3"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "128GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Wi-Fi"
+      }
+    ],
+    "legacyId": "ipad-air-m3"
+  },
+  {
+    "id": "backend_prod_4",
+    "name": "Sony WH-1000XM6",
+    "price": 11490000,
+    "image": "/assets/products/sony-wh1000xm6.jpg",
+    "barcode": "8936117530049",
+    "category": "Tai nghe",
+    "rating": 4.9,
+    "stock": 18,
+    "description": "Sony WH-1000XM6 là tai nghe không dây cao cấp, phù hợp với nhu cầu nghe nhạc, làm việc và di chuyển nhờ khả năng chống ồn chủ động.",
+    "specs": [
+      {
+        "label": "Kiểu tai nghe",
+        "value": "Over-ear"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Bluetooth"
+      },
+      {
+        "label": "Chống ồn",
+        "value": "ANC"
+      },
+      {
+        "label": "Sạc",
+        "value": "USB-C"
+      }
+    ],
+    "legacyId": "sony-wh1000xm6"
+  },
+  {
+    "id": "backend_prod_5",
+    "name": "Apple Watch Series 10",
+    "price": 10990000,
+    "image": "/assets/products/apple-watch-series-10.jpg",
+    "barcode": "8936117530050",
+    "category": "Đồng hồ thông minh",
+    "rating": 4.8,
+    "stock": 20,
+    "description": "Apple Watch Series 10 hỗ trợ theo dõi hoạt động hằng ngày, thông báo và các tiện ích thông minh khi sử dụng cùng iPhone.",
+    "specs": [
+      {
+        "label": "Loại",
+        "value": "Smartwatch"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Bluetooth / Wi-Fi"
+      },
+      {
+        "label": "Tương thích",
+        "value": "iPhone"
+      },
+      {
+        "label": "Sạc",
+        "value": "Sạc từ tính"
+      }
+    ],
+    "legacyId": "apple-watch-series-10"
+  },
+  {
+    "id": "backend_prod_6",
+    "name": "Logitech MX Master 4",
+    "price": 3190000,
+    "image": "/assets/products/mx-master-4.jpg",
+    "barcode": "8936117530051",
+    "category": "Phụ kiện máy tính",
+    "rating": 4.7,
+    "stock": 24,
+    "description": "Logitech MX Master 4 là chuột không dây hướng đến người dùng văn phòng và sáng tạo, với thiết kế công thái học và nhiều nút điều khiển.",
+    "specs": [
+      {
+        "label": "Loại",
+        "value": "Chuột không dây"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Bluetooth"
+      },
+      {
+        "label": "Sạc",
+        "value": "USB-C"
+      },
+      {
+        "label": "Mục đích",
+        "value": "Văn phòng / Sáng tạo"
+      }
+    ],
+    "legacyId": "mx-master-4"
+  },
+  {
+    "id": "backend_prod_7",
+    "name": "Anker Prime 20,000mAh",
+    "price": 3490000,
+    "image": "/assets/products/anker-prime-20000.jpg",
+    "barcode": "8936117530052",
+    "category": "Pin sạc dự phòng",
+    "rating": 4.8,
+    "stock": 30,
+    "description": "Anker Prime 20,000mAh là pin sạc dự phòng dung lượng lớn, phù hợp cho điện thoại, máy tính bảng và các thiết bị sử dụng USB-C.",
+    "specs": [
+      {
+        "label": "Dung lượng",
+        "value": "20,000mAh"
+      },
+      {
+        "label": "Kết nối",
+        "value": "USB-C"
+      },
+      {
+        "label": "Loại",
+        "value": "Pin sạc dự phòng"
+      },
+      {
+        "label": "Ứng dụng",
+        "value": "Điện thoại / Tablet"
+      }
+    ],
+    "legacyId": "anker-prime-20000"
+  },
+  {
+    "id": "backend_prod_8",
+    "name": "iPhone 16 Pro - Phiên bản 2",
+    "price": 28990000,
+    "image": "/assets/products/iphone-16-pro.jpg",
+    "barcode": "8936117530058",
+    "category": "Điện thoại",
+    "rating": 4.9,
+    "stock": 12,
+    "description": "iPhone 16 Pro là mẫu smartphone cao cấp của Apple, phù hợp cho người dùng cần hiệu năng mạnh, camera chất lượng cao và hệ sinh thái iOS ổn định.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "6.3 inch"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "128GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "5G"
+      },
+      {
+        "label": "Cổng sạc",
+        "value": "USB-C"
+      }
+    ],
+    "legacyId": "iphone-16-pro"
+  },
+  {
+    "id": "backend_prod_9",
+    "name": "Samsung Galaxy S25 Ultra - Phiên bản 2",
+    "price": 30990000,
+    "image": "/assets/products/galaxy-s25-ultra.jpg",
+    "barcode": "8936117530059",
+    "category": "Điện thoại",
+    "rating": 4.9,
+    "stock": 9,
+    "description": "Galaxy S25 Ultra là smartphone cao cấp hướng đến người dùng cần màn hình lớn, khả năng đa nhiệm, camera linh hoạt và bút S Pen.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "6.9 inch"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "256GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "5G"
+      },
+      {
+        "label": "Bút",
+        "value": "S Pen"
+      }
+    ],
+    "legacyId": "galaxy-s25-ultra"
+  },
+  {
+    "id": "backend_prod_10",
+    "name": "MacBook Air M4 13-inch - Phiên bản 2",
+    "price": 26990000,
+    "image": "/assets/products/macbook-air-m4.jpg",
+    "barcode": "8936117530060",
+    "category": "Laptop",
+    "rating": 4.8,
+    "stock": 7,
+    "description": "MacBook Air 13-inch là laptop mỏng nhẹ dành cho học tập, văn phòng và công việc sáng tạo, với thời lượng pin tốt và thiết kế gọn nhẹ.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "13 inch"
+      },
+      {
+        "label": "Chip",
+        "value": "Apple M4"
+      },
+      {
+        "label": "RAM",
+        "value": "16GB"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "256GB SSD"
+      }
+    ],
+    "legacyId": "macbook-air-m4"
+  },
+  {
+    "id": "backend_prod_11",
+    "name": "iPad Air M3 11-inch - Phiên bản 2",
+    "price": 16990000,
+    "image": "/assets/products/ipad-air-m3.jpg",
+    "barcode": "8936117530061",
+    "category": "Máy tính bảng",
+    "rating": 4.8,
+    "stock": 15,
+    "description": "iPad Air 11-inch phù hợp cho học tập, giải trí và làm việc di động nhờ thiết kế mỏng nhẹ, màn hình lớn và hiệu năng tốt.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "11 inch"
+      },
+      {
+        "label": "Chip",
+        "value": "Apple M3"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "128GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Wi-Fi"
+      }
+    ],
+    "legacyId": "ipad-air-m3"
+  },
+  {
+    "id": "backend_prod_12",
+    "name": "Sony WH-1000XM6 - Phiên bản 2",
+    "price": 11490000,
+    "image": "/assets/products/sony-wh1000xm6.jpg",
+    "barcode": "8936117530062",
+    "category": "Tai nghe",
+    "rating": 4.9,
+    "stock": 18,
+    "description": "Sony WH-1000XM6 là tai nghe không dây cao cấp, phù hợp với nhu cầu nghe nhạc, làm việc và di chuyển nhờ khả năng chống ồn chủ động.",
+    "specs": [
+      {
+        "label": "Kiểu tai nghe",
+        "value": "Over-ear"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Bluetooth"
+      },
+      {
+        "label": "Chống ồn",
+        "value": "ANC"
+      },
+      {
+        "label": "Sạc",
+        "value": "USB-C"
+      }
+    ],
+    "legacyId": "sony-wh1000xm6"
+  },
+  {
+    "id": "backend_prod_13",
+    "name": "Apple Watch Series 10 - Phiên bản 2",
+    "price": 10990000,
+    "image": "/assets/products/apple-watch-series-10.jpg",
+    "barcode": "8936117530063",
+    "category": "Đồng hồ thông minh",
+    "rating": 4.8,
+    "stock": 20,
+    "description": "Apple Watch Series 10 hỗ trợ theo dõi hoạt động hằng ngày, thông báo và các tiện ích thông minh khi sử dụng cùng iPhone.",
+    "specs": [
+      {
+        "label": "Loại",
+        "value": "Smartwatch"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Bluetooth / Wi-Fi"
+      },
+      {
+        "label": "Tương thích",
+        "value": "iPhone"
+      },
+      {
+        "label": "Sạc",
+        "value": "Sạc từ tính"
+      }
+    ],
+    "legacyId": "apple-watch-series-10"
+  },
+  {
+    "id": "backend_prod_14",
+    "name": "Logitech MX Master 4 - Phiên bản 2",
+    "price": 3190000,
+    "image": "/assets/products/mx-master-4.jpg",
+    "barcode": "8936117530064",
+    "category": "Phụ kiện máy tính",
+    "rating": 4.7,
+    "stock": 24,
+    "description": "Logitech MX Master 4 là chuột không dây hướng đến người dùng văn phòng và sáng tạo, với thiết kế công thái học và nhiều nút điều khiển.",
+    "specs": [
+      {
+        "label": "Loại",
+        "value": "Chuột không dây"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Bluetooth"
+      },
+      {
+        "label": "Sạc",
+        "value": "USB-C"
+      },
+      {
+        "label": "Mục đích",
+        "value": "Văn phòng / Sáng tạo"
+      }
+    ],
+    "legacyId": "mx-master-4"
+  },
+  {
+    "id": "backend_prod_15",
+    "name": "Anker Prime 20,000mAh - Phiên bản 2",
+    "price": 3490000,
+    "image": "/assets/products/anker-prime-20000.jpg",
+    "barcode": "8936117530065",
+    "category": "Pin sạc dự phòng",
+    "rating": 4.8,
+    "stock": 30,
+    "description": "Anker Prime 20,000mAh là pin sạc dự phòng dung lượng lớn, phù hợp cho điện thoại, máy tính bảng và các thiết bị sử dụng USB-C.",
+    "specs": [
+      {
+        "label": "Dung lượng",
+        "value": "20,000mAh"
+      },
+      {
+        "label": "Kết nối",
+        "value": "USB-C"
+      },
+      {
+        "label": "Loại",
+        "value": "Pin sạc dự phòng"
+      },
+      {
+        "label": "Ứng dụng",
+        "value": "Điện thoại / Tablet"
+      }
+    ],
+    "legacyId": "anker-prime-20000"
+  },
+  {
+    "id": "backend_prod_16",
+    "name": "iPhone 16 Pro - Phiên bản 3",
+    "price": 28990000,
+    "image": "/assets/products/iphone-16-pro.jpg",
+    "barcode": "8936117530066",
+    "category": "Điện thoại",
+    "rating": 4.9,
+    "stock": 12,
+    "description": "iPhone 16 Pro là mẫu smartphone cao cấp của Apple, phù hợp cho người dùng cần hiệu năng mạnh, camera chất lượng cao và hệ sinh thái iOS ổn định.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "6.3 inch"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "128GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "5G"
+      },
+      {
+        "label": "Cổng sạc",
+        "value": "USB-C"
+      }
+    ],
+    "legacyId": "iphone-16-pro"
+  },
+  {
+    "id": "backend_prod_17",
+    "name": "Samsung Galaxy S25 Ultra - Phiên bản 3",
+    "price": 30990000,
+    "image": "/assets/products/galaxy-s25-ultra.jpg",
+    "barcode": "8936117530067",
+    "category": "Điện thoại",
+    "rating": 4.9,
+    "stock": 9,
+    "description": "Galaxy S25 Ultra là smartphone cao cấp hướng đến người dùng cần màn hình lớn, khả năng đa nhiệm, camera linh hoạt và bút S Pen.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "6.9 inch"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "256GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "5G"
+      },
+      {
+        "label": "Bút",
+        "value": "S Pen"
+      }
+    ],
+    "legacyId": "galaxy-s25-ultra"
+  },
+  {
+    "id": "backend_prod_18",
+    "name": "MacBook Air M4 13-inch - Phiên bản 3",
+    "price": 26990000,
+    "image": "/assets/products/macbook-air-m4.jpg",
+    "barcode": "8936117530068",
+    "category": "Laptop",
+    "rating": 4.8,
+    "stock": 7,
+    "description": "MacBook Air 13-inch là laptop mỏng nhẹ dành cho học tập, văn phòng và công việc sáng tạo, với thời lượng pin tốt và thiết kế gọn nhẹ.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "13 inch"
+      },
+      {
+        "label": "Chip",
+        "value": "Apple M4"
+      },
+      {
+        "label": "RAM",
+        "value": "16GB"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "256GB SSD"
+      }
+    ],
+    "legacyId": "macbook-air-m4"
+  },
+  {
+    "id": "backend_prod_19",
+    "name": "iPad Air M3 11-inch - Phiên bản 3",
+    "price": 16990000,
+    "image": "/assets/products/ipad-air-m3.jpg",
+    "barcode": "8936117530069",
+    "category": "Máy tính bảng",
+    "rating": 4.8,
+    "stock": 15,
+    "description": "iPad Air 11-inch phù hợp cho học tập, giải trí và làm việc di động nhờ thiết kế mỏng nhẹ, màn hình lớn và hiệu năng tốt.",
+    "specs": [
+      {
+        "label": "Màn hình",
+        "value": "11 inch"
+      },
+      {
+        "label": "Chip",
+        "value": "Apple M3"
+      },
+      {
+        "label": "Bộ nhớ",
+        "value": "128GB"
+      },
+      {
+        "label": "Kết nối",
+        "value": "Wi-Fi"
+      }
+    ],
+    "legacyId": "ipad-air-m3"
+  }
+]

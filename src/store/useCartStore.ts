@@ -10,9 +10,11 @@ export interface CartItem extends Product {
 
 interface CartState {
   items: CartItem[];
-  addItem: (product: Product) => void;
+  addItem: (product: Product, quantity?: number) => boolean;
   removeItem: (productId: string) => void;
+  setQuantity: (productId: string, quantity: number) => boolean;
   clearCart: () => void;
+  completeCheckout: (purchased: {id: string; quantity: number}[]) => void;
   totalQuantity: () => number;
   totalPrice: () => number;
 }
@@ -21,7 +23,13 @@ export const useCartStore = create<CartState>()(
   persist(
     (set, get) => ({
       items: [],
-      addItem: product =>
+      addItem: (product, quantity = 1) => {
+        const existingItem = get().items.find(item => item.id === product.id);
+        const currentQuantity = existingItem?.quantity ?? 0;
+        const stockLimit = Math.min(product.stock, existingItem?.stock ?? product.stock, 100);
+        if (!Number.isInteger(quantity) || quantity < 1 || !Number.isFinite(stockLimit) || currentQuantity + quantity > stockLimit) {
+          return false;
+        }
         set(state => {
           const existing = state.items.find(item => item.id === product.id);
 
@@ -29,19 +37,33 @@ export const useCartStore = create<CartState>()(
             return {
               items: state.items.map(item =>
                 item.id === product.id
-                  ? {...item, quantity: item.quantity + 1}
+                  ? {...product, quantity: item.quantity + quantity}
                   : item,
               ),
             };
           }
 
-          return {items: [...state.items, {...product, quantity: 1}]};
-        }),
+          return {items: [...state.items, {...product, quantity}]};
+        });
+        return true;
+      },
       removeItem: productId =>
         set(state => ({
           items: state.items.filter(item => item.id !== productId),
         })),
+      setQuantity: (productId, quantity) => {
+        const item = get().items.find(product => product.id === productId);
+        if (!item || !Number.isInteger(quantity) || quantity < 1 || quantity > Math.min(item.stock, 100)) {return false;}
+        set(state => ({items: state.items.map(product => product.id === productId ? {...product, quantity} : product)}));
+        return true;
+      },
       clearCart: () => set({items: []}),
+      completeCheckout: purchased => set(state => ({
+        items: state.items.map(item => ({
+          ...item,
+          quantity: item.quantity - (purchased.find(product => product.id === item.id)?.quantity ?? 0),
+        })).filter(item => item.quantity > 0),
+      })),
       totalQuantity: () =>
         get().items.reduce((total, item) => total + item.quantity, 0),
       totalPrice: () =>

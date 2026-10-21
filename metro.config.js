@@ -1,4 +1,4 @@
-const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
+const { getDefaultConfig } = require('expo/metro-config');
 
 /**
  * Metro configuration
@@ -6,6 +6,12 @@ const { getDefaultConfig, mergeConfig } = require('@react-native/metro-config');
  *
  * @type {import('@react-native/metro-config').MetroConfig}
  */
-const config = {};
-
-module.exports = mergeConfig(getDefaultConfig(__dirname), config);
+const config = getDefaultConfig(__dirname);
+config.maxWorkers = 2;
+const existingBlockList = config.resolver.blockList;
+config.resolver.blockList = [
+  ...(Array.isArray(existingBlockList) ? existingBlockList : existingBlockList ? [existingBlockList] : []),
+  /[/\\](?:\.gradle-build|\.private|\.sprint9-check|\.sprint10-check|shopai-backend)[/\\].*/,
+  /[/\\]android[/\\](?:app[/\\])?(?:build|\.cxx)[/\\].*/,
+];
+module.exports = config;

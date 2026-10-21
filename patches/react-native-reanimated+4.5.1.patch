@@ -1,0 +1,13 @@
+diff --git a/node_modules/react-native-reanimated/android/settings.gradle.kts b/node_modules/react-native-reanimated/android/settings.gradle.kts
+index 5c30250..cc29291 100644
+--- a/node_modules/react-native-reanimated/android/settings.gradle.kts
++++ b/node_modules/react-native-reanimated/android/settings.gradle.kts
+@@ -12,7 +12,7 @@ pluginManagement {
+                 useModule("com.diffplug.spotless:spotless-plugin-gradle:8.1.0")
+             }
+             if (requested.id.id.startsWith("org.jetbrains.kotlin")) {
+-                useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:2.1.20")
++                useModule("org.jetbrains.kotlin:kotlin-gradle-plugin:2.3.0")
+             }
+         }
+     }

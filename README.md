@@ -1,4 +1,18 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# ShopAI — Chương 1–10
+
+Bảng đối chiếu yêu cầu, các sửa mới, bằng chứng máy ảo và hướng dẫn chạy:
+[CHAPTER_1_10_STATUS.md](CHAPTER_1_10_STATUS.md).
+
+Backend NestJS, JWT, Prisma/SQLite và Gemini nằm trong `shopai-backend/`.
+Hướng dẫn chạy, kết quả kiểm thử, Release, cấu hình Firebase/EAS và rollback:
+[CHAPTER_9_10_STATUS.md](CHAPTER_9_10_STATUS.md).
+
+Trên Windows dùng `npm.cmd` / `npx.cmd` nếu PowerShell chặn script npm.
+Không dùng Expo Go cho ứng dụng có Firebase native; dùng Android build hoặc development client.
+
+---
+
+Hướng dẫn React Native gốc:
 
 # Getting Started
 

@@ -1,3 +1,5 @@
+import {NavigatorScreenParams} from '@react-navigation/native';
+
 export type RootStackParamList = {
   Login: undefined;
   Register: undefined;
@@ -19,19 +21,27 @@ export type HomeStackParamList = {
   };
 
   Scanner: undefined;
+  AIChat: undefined;
 };
 
 
 export type MainTabParamList = {
-  HomeTab: undefined;
+  AIChat: undefined;
+  HomeTab: NavigatorScreenParams<HomeStackParamList> | undefined;
   Cart: undefined;
   Orders: undefined;
 };
 
 export type AppStackParamList = {
-  MainTabs: undefined;
+  MainTabs: NavigatorScreenParams<MainTabParamList> | undefined;
   Checkout: undefined;
   OrderDetail: {
     orderId: string;
   };
+};
+
+export type AppDrawerParamList = {
+  Shop: NavigatorScreenParams<AppStackParamList> | undefined;
+  Settings: undefined;
+  Practice: undefined;
 };

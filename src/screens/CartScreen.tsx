@@ -1,3 +1,4 @@
+import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 
 import {
@@ -12,15 +13,18 @@ import {
 import {SafeAreaView} from 'react-native-safe-area-context';
 import {useNavigation} from '@react-navigation/native';
 
-import {COLORS, SIZES} from '@constants/theme';
+import {ThemeColors, SIZES} from '@constants/theme';
 
 import {useCartStore} from '../store/useCartStore';
 
 function CartScreen(): React.JSX.Element {
+  const {styles} = useThemedStyles(makeStyles);
+
   const navigation = useNavigation<any>();
   const cartItems = useCartStore(state => state.items);
   const clearCart = useCartStore(state => state.clearCart);
   const removeItem = useCartStore(state => state.removeItem);
+  const setQuantity = useCartStore(state => state.setQuantity);
   const total = cartItems.reduce(
     (sum, item) => sum + item.price * item.quantity,
     0,
@@ -72,14 +76,18 @@ function CartScreen(): React.JSX.Element {
                       {item.name}
                     </Text>
                     <Text style={styles.itemPrice}>
-                      {item.price.toLocaleString()} đ
+                      {item.price.toLocaleString('vi-VN')} đ
                     </Text>
-                    <Text style={styles.quantity}>Số lượng: {item.quantity}</Text>
+                    <View style={styles.quantityRow}>
+                      <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Giảm số lượng ${item.name}`} disabled={item.quantity <= 1} onPress={() => setQuantity(item.id, item.quantity - 1)} style={styles.quantityButton}><Text style={styles.quantityControl}>−</Text></TouchableOpacity>
+                      <Text accessibilityLabel={`Số lượng ${item.quantity}`} style={styles.quantityValue}>{item.quantity}</Text>
+                      <TouchableOpacity accessibilityRole="button" accessibilityLabel={`Tăng số lượng ${item.name}`} disabled={item.quantity >= Math.min(item.stock, 100)} onPress={() => setQuantity(item.id, item.quantity + 1)} style={styles.quantityButton}><Text style={styles.quantityControl}>+</Text></TouchableOpacity>
+                    </View>
                   </View>
 
                   <View style={styles.itemActions}>
                     <Text style={styles.itemTotal}>
-                      {(item.price * item.quantity).toLocaleString()} đ
+                      {(item.price * item.quantity).toLocaleString('vi-VN')} đ
                     </Text>
                     <TouchableOpacity
                       onPress={() => removeItem(item.id)}
@@ -95,17 +103,17 @@ function CartScreen(): React.JSX.Element {
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Tạm tính</Text>
                 <Text style={styles.summaryValue}>
-                  {total.toLocaleString()} đ
+                  {total.toLocaleString('vi-VN')} đ
                 </Text>
               </View>
               <View style={styles.summaryRow}>
                 <Text style={styles.summaryLabel}>Phí vận chuyển</Text>
-                <Text style={styles.freeText}>Miễn phí</Text>
+                <Text style={styles.freeText}>Chưa bao gồm</Text>
               </View>
               <View style={styles.divider} />
               <View style={styles.summaryRow}>
-                <Text style={styles.totalLabel}>Tổng cộng</Text>
-                <Text style={styles.totalValue}>{total.toLocaleString()} đ</Text>
+                <Text style={styles.totalLabel}>Tiền sản phẩm</Text>
+                <Text style={styles.totalValue}>{total.toLocaleString('vi-VN')} đ</Text>
               </View>
               <TouchableOpacity
                 style={styles.checkoutButton}
@@ -122,7 +130,11 @@ function CartScreen(): React.JSX.Element {
 
 export default CartScreen;
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
+  quantityRow: {flexDirection: 'row', alignItems: 'center', marginTop: 8, gap: 8},
+  quantityButton: {width: 40, height: 44, borderWidth: 1, borderColor: COLORS.border, borderRadius: 10, alignItems: 'center', justifyContent: 'center'},
+  quantityControl: {fontSize: 23, color: COLORS.primary},
+  quantityValue: {fontSize: 16, fontWeight: '700', color: COLORS.text, minWidth: 18, textAlign: 'center'},
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,
@@ -170,7 +182,7 @@ const styles = StyleSheet.create({
     width: 76,
     height: 76,
     borderRadius: 10,
-    backgroundColor: '#F7F8FA',
+    backgroundColor: COLORS.mutedSurface,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -265,7 +277,7 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   checkoutText: {
-    color: COLORS.surface,
+    color: COLORS.onPrimary,
     fontSize: 15,
     fontWeight: '800',
   },
@@ -304,7 +316,7 @@ const styles = StyleSheet.create({
     borderRadius: 39,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#E9F8EF',
+    backgroundColor: COLORS.successSoft,
     marginBottom: 20,
   },
   successIcon: {
@@ -359,7 +371,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 28,
   },
   continueButtonText: {
-    color: COLORS.surface,
+    color: COLORS.onPrimary,
     fontSize: 15,
     fontWeight: '800',
   },

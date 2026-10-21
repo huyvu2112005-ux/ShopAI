@@ -1,3 +1,4 @@
+import {useThemedStyles} from '../hooks/useThemedStyles';
 import React from 'react';
 import {
   View,
@@ -11,11 +12,13 @@ import ShopButton from '@components/ui/ShopButton';
 import useCountdown from '@hooks/useCountdown';
 
 import {
-  COLORS,
+  ThemeColors,
   SIZES,
 } from '@constants/theme';
 
 export default function CountdownScreen() {
+  const {colors: COLORS, styles} = useThemedStyles(makeStyles);
+
   const {
     seconds,
     isRunning,
@@ -91,7 +94,7 @@ export default function CountdownScreen() {
   );
 }
 
-const styles = StyleSheet.create({
+const makeStyles = (COLORS: ThemeColors) => StyleSheet.create({
   safeArea: {
     flex: 1,
     backgroundColor: COLORS.background,

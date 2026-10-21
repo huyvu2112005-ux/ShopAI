@@ -34,6 +34,8 @@
 		<key>NSAllowsLocalNetworking</key>
 		<true/>
 	</dict>
+	<key>NSFaceIDUsageDescription</key>
+	<string>ShopAI dùng Face ID để mở khóa ứng dụng và bảo vệ phiên đăng nhập.</string>
 	<key>NSCameraUsageDescription</key>
 	<string>ShopAI can Camera de quet ma vach san pham nhanh chong.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>

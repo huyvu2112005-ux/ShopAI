@@ -1,4 +1,37 @@
 {
-  "name": "ShopAI",
-  "displayName": "ShopAI"
+  "expo": {
+    "name": "ShopAI",
+    "slug": "shopai",
+    "version": "1.1.0",
+    "orientation": "portrait",
+    "updates": {
+      "enabled": true,
+      "checkAutomatically": "ON_LOAD",
+      "fallbackToCacheTimeout": 3000,
+      "url": "https://u.expo.dev/398db7e1-1c5f-474a-b2ce-db8d4a308fec"
+    },
+    "runtimeVersion": "1.1.0",
+    "ios": {
+      "bundleIdentifier": "com.shopai",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.shopai"
+    },
+    "extra": {
+      "eas": {
+        "projectId": "398db7e1-1c5f-474a-b2ce-db8d4a308fec"
+      }
+    },
+    "plugins": [
+      "expo-secure-store",
+      [
+        "expo-local-authentication",
+        {
+          "faceIDPermission": "Cho phép ShopAI sử dụng Face ID để mở khóa ứng dụng."
+        }
+      ]
+    ],
+    "owner": "huyvu2112005"
+  }
 }

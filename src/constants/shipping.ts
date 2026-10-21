@@ -3,6 +3,9 @@ export const WAREHOUSE_COORDS = {
   longitude: 106.7009,
 };
 
+export const DEMO_WAREHOUSE_DISTANCE_KM = 12.6;
+export const REALISTIC_DISTANCE_LIMIT_KM = 3000;
+
 export const SHIPPING_TIERS = [
   {maxKm: 5, fee: 15000, label: 'Nội thành - giao trong 2 giờ'},
   {maxKm: 20, fee: 25000, label: 'Ngoại thành - giao trong ngày'},
@@ -35,3 +38,17 @@ export const getDistanceKm = (
 export const getShippingTier = (distanceKm: number) =>
   SHIPPING_TIERS.find(tier => distanceKm <= tier.maxKm) ??
   SHIPPING_TIERS[SHIPPING_TIERS.length - 1];
+
+export const getDisplayShippingDistance = (distanceKm: number) => {
+  if (distanceKm > REALISTIC_DISTANCE_LIMIT_KM) {
+    return {
+      distanceKm: DEMO_WAREHOUSE_DISTANCE_KM,
+      isDemoDistance: true,
+    };
+  }
+
+  return {
+    distanceKm,
+    isDemoDistance: false,
+  };
+};

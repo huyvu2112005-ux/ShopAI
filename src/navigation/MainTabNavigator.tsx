@@ -13,6 +13,8 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import HomeStackNavigator from './HomeStackNavigator';
 import CartScreen from '../screens/CartScreen';
 import OrdersScreen from '../screens/OrdersScreen';
+import AIChatScreen from '../screens/AIChatScreen';
+import {useThemeColors} from '../contexts/ThemeContext';
 
 import {
   MainTabParamList,
@@ -37,10 +39,14 @@ const CartIcon = ({color, size}: TabIconProps) => (
 );
 
 const OrdersIcon = ({color, size}: TabIconProps) => (
-  <Icon name="receipt-text-outline" color={color} size={size} />
+  <Icon name="receipt" color={color} size={size} />
+);
+const ChatIcon = ({color, size}: TabIconProps) => (
+  <Icon name="robot-outline" color={color} size={size} />
 );
 
 const MainTabNavigator = (): React.JSX.Element => {
+  const COLORS = useThemeColors();
   const cartBadgeCount = useCartStore(state => state.totalQuantity());
 
   return (
@@ -48,8 +54,8 @@ const MainTabNavigator = (): React.JSX.Element => {
       initialRouteName="HomeTab"
       screenOptions={{
         headerShown: false,
-        tabBarActiveTintColor: '#E53935',
-        tabBarInactiveTintColor: '#777777',
+        tabBarActiveTintColor: COLORS.primary,
+        tabBarInactiveTintColor: COLORS.textLight,
       }}>
       <Tab.Screen
         name="HomeTab"
@@ -90,6 +96,7 @@ const MainTabNavigator = (): React.JSX.Element => {
           tabBarIcon: OrdersIcon,
         }}
       />
+      <Tab.Screen name="AIChat" component={AIChatScreen} options={{title: 'Trợ lý AI', tabBarIcon: ChatIcon}} />
     </Tab.Navigator>
   );
 };
