@@ -93,9 +93,9 @@ jobs:
           restore-keys: ${{ runner.os }}-gradle-
       - run: npm ci
       - name: Install exact Android toolchain
-        run: |
-          yes | sdkmanager --licenses >/dev/null || true
-          sdkmanager 'platforms;android-37' 'build-tools;37.0.0' 'ndk;27.1.12297006' 'cmake;3.22.1'
+        uses: android-actions/setup-android@v4
+        with:
+          packages: 'platform-tools platforms;android-37 build-tools;37.0.0 ndk;27.1.12297006 cmake;3.22.1'
       - name: Build Debug APK (Metro required)
         working-directory: android
         run: bash ./gradlew :app:assembleDebug -PreactNativeArchitectures=x86_64 --max-workers=2 --no-daemon --console=plain
